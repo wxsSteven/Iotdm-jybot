@@ -69,7 +69,8 @@
                 </executions>
                 <configuration>
                     <schemaDirectory>${project.basedir}/src/main/resources/XSDbundle-v1_0_0</schemaDirectory>
-                    <outputDirectory>${project.basedir}/src/main/</outputDirectory>
+                    <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
+                    <clearOutputDir>false</clearOutputDir>
                     <packageName>org.opendaylight.iotdm.primitive</packageName>
                 </configuration>
             </plugin>
