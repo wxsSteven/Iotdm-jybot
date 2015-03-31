@@ -9,71 +9,51 @@ import java.util.Map;
 /**
  * Created by wenxshi on 3/4/15.
  */
-public class UriBuilder {
+public class Uri {
 
-    public static String REQUEST_IDENTIFIER = "requestIdentifier";
-    public static String FROM = "from";
 
     private String scheme = "http";
     private String host = "";
-    private int port = -1;
+    private int port = 8989;
     private String path = "";
     private Map<String, List<String>> query = new HashMap<String, List<String>>();
 
 
-    public UriBuilder(String uriStr) {
+    public Uri(String uriStr) {
         try {
             URI uri = new URI(uriStr);
             scheme = uri.getScheme();
             host = uri.getHost();
             port = uri.getPort();
             path = uri.getPath();
-            for (String str : uri.getQuery().split(":")) {
-                String[] arr = str.split("&");
+            for (String str : uri.getQuery().split("&")) {
+                String[] arr = str.split("=");
                 String name = arr[0];
                 String value = arr[1];
-                addQuery(name,value);
+                addQuery(name, value);
             }
         } catch (Exception e) {
 
         }
     }
 
-    public UriBuilder addQuery(String name, String value) {
+
+    public List<String> getQueryValue(String name){
+        return query.get(name);
+    }
+
+    public void addQuery(String name, String value) {
         if (!query.containsKey(name)) {
             query.put(name, new LinkedList<String>());
         }
         query.get(name).add(value);
-        return this;
     }
 
 
-    public UriBuilder removeQuery(String name) {
+    public void removeQuery(String name) {
         if (query.containsKey(name)) {
             query.remove(name);
         }
-        return this;
-    }
-
-
-    public UriBuilder addQueryRequestIdentifier(String requestIdentifer) {
-        addQuery(REQUEST_IDENTIFIER, requestIdentifer);
-        return this;
-    }
-
-    public UriBuilder addQueryFrom(String from) {
-        addQuery(FROM, from);
-        return this;
-    }
-
-    public UriBuilder setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public UriBuilder setPort(String port) {
-        this.port = Integer.valueOf(port);
-        return this;
     }
 
     private String toQuery() {
@@ -95,7 +75,7 @@ public class UriBuilder {
         return sb.toString();
     }
 
-    public String build() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(scheme);
         sb.append("://");
@@ -104,11 +84,10 @@ public class UriBuilder {
             sb.append(":");
             sb.append(port);
         }
-        if(!path.startsWith("/"))
+        if (!path.startsWith("/"))
             sb.append("/");
         sb.append(path);
         sb.append(toQuery());
         return sb.toString();
     }
-
 }
