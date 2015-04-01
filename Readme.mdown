@@ -1,0 +1,36 @@
+#Iotdm-jybot
+
+This is java libray based on Robot Framework for iotdm test.
+
+###Pre-install Request
+Make sure python 2.7+ installed properly
+
+###Setup Working Environment
+
+1. Install the jython 2.7+, link: http://www.jython.org/downloads.html
+2. Add the jython into your enviroment variable (PATH);
+3. Download **Source Code** of latest Robot Framework from the link:https://pypi.python.org/pypi/robotframework
+4. At source code directory and run:
+
+```Bash
+    jython setup.py install
+```
+
+###Testing
+
+1. Add your test case into src/test/java/robot/Test.robot file
+
+2.  At root directory of project and run:
+```bash
+mvn clean install
+```
+ 
+3.  Make the run.sh executable and run:
+```bash
+./run.sh
+```
+
+4.  Report file will be generated in src/test/java/robot fold
+
+###Future
+All steps in Testing will be handled by maven plugin
