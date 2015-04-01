@@ -1,16 +1,34 @@
 package org.opendaylight.iotdm.robot.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.opendaylight.iotdm.onem2m.core.constant.OneM2MName;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.FilterCriteria;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.enumeration.*;
 
-import javax.xml.bind.JAXBContext;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wenxshi on 3/30/15.
  */
 public class Prepare {
+    private static Map<String, EnumApi[]> map;
+
+    static {
+        map = new HashMap<String, EnumApi[]>();
+        map.put(OneM2MName.RESOURCE_TYPE, ResourceType.values());
+        map.put(OneM2MName.NOTIFICATION_CONTENT_TYPE, NotificationContentType.values());
+        map.put(OneM2MName.RESPONSE_TYPE, ResponseType.values());
+        map.put(OneM2MName.DISCOVERY_RESULT_TYPE, DiscResType.values());
+    }
+
     public static String uri(RequestPrimitive requestPrimitive) {
 
         StringBuilder sb = new StringBuilder();
@@ -138,7 +156,7 @@ public class Prepare {
         //----------------------------------------------------------------------------------------------------
         if (fc.getLabels() != null && fc.getLabels().size() > 0) {
             for (String l : fc.getLabels()) {
-                sb.append(OneM2MName.LABELS + "=" + l+ "&");
+                sb.append(OneM2MName.LABELS + "=" + l + "&");
             }
         }
 
@@ -151,7 +169,7 @@ public class Prepare {
         if (fc.getAttribute() != null && fc.getAttribute().size() > 0) {
             for (Attribute attr : fc.getAttribute()) {
                 if (attr.getName() != null && attr.getValue() != null)
-                    sb.append(OneM2MName.ATTRIBUTE+"="+attr.getName() + ":" + attr.getValue() + "&");
+                    sb.append(OneM2MName.ATTRIBUTE + "=" + attr.getName() + ":" + attr.getValue() + "&");
             }
         }
         //-----------------------------------------------------------------------------------------------------
@@ -168,5 +186,60 @@ public class Prepare {
             return GsonUtil.toJson(requestPrimitive);
         }
         return null;
+    }
+
+    public static String payloadAdapter(String str) {
+        JsonParser parser = new JsonParser();
+        JsonElement root = parser.parse(str).getAsJsonObject();
+        changeElementByKey(root);
+        return GsonUtil.toPrettyJson(root);
+    }
+
+    private static void changeElementByKey(JsonElement element) {
+        for (String key : map.keySet()) {
+            changeElementByKeyHelper(element, key);
+        }
+    }
+
+    private static void changeElementByKeyHelper(JsonElement element, String key) {
+        if (element.isJsonObject()) {
+            JsonObject object = element.getAsJsonObject();
+            if (object.has(key)) {
+                BigInteger number = object.get(key).getAsBigInteger();
+                object.remove(key);
+                object.addProperty(key, searchName(key, number));
+            }
+            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+                changeElementByKeyHelper(entry.getValue(), key);
+            }
+        } else if (element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) {
+                changeElementByKeyHelper(array.get(i), key);
+            }
+        }
+    }
+
+
+    private static String searchName(String key, BigInteger number) {
+        for (EnumApi api : map.get(key)) {
+            if (number.equals(api.getValue()))
+                return api.getInterpretation();
+        }
+        return "";
+    }
+
+    public static String uriAdapter(String uriStr) {
+        Uri ub = new Uri(uriStr);
+        for (String name : map.keySet()) {
+            List<String> values=ub.getQueryValue(name);
+            if(values==null)
+                continue;
+            ub.removeQuery(name);
+            for (String value : values) {
+                ub.addQuery(name, searchName(name, new BigInteger(value)));
+            }
+        }
+        return ub.toString();
     }
 }

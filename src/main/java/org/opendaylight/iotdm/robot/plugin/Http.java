@@ -9,7 +9,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.api.OneM2MOperation;
 import org.opendaylight.iotdm.robot.api.Plugin;
-import org.opendaylight.iotdm.robot.example.Example;
+import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
 
 import javax.servlet.ServletException;
@@ -37,13 +37,13 @@ public class Http implements Plugin {
     public Http() {
         httpServer = new Server(PORT);
         httpClient = new HttpClient();
+        httpServer.setHandler(new NotificationHandler());
     }
 
     public void start() {
         try {
-            httpServer.setHandler(new NotificationHandler());
-            httpServer.start();
             httpClient.start();
+            httpServer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,12 +59,18 @@ public class Http implements Plugin {
     }
 
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        String url = Prepare.uri(requestPrimitive);
-        String payload = Prepare.payload(requestPrimitive);
+        String url = Prepare.uriAdapter(Prepare.uri(requestPrimitive));
+        String payload =Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
+
+
+        System.out.println("Uri:");
+        System.out.println(url+"\n");
+        System.out.println("Payload:");
+        System.out.println(payload);
 
         ContentExchange exchange = new ContentExchange();
         exchange.setURL(url);
-        if (payload != null && payload.equals(""))
+        if (payload != null && !payload.equals(""))
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
 
         switch (requestPrimitive.getOperation().intValue()) {
@@ -106,7 +112,7 @@ public class Http implements Plugin {
                 response) throws IOException, ServletException {
             String payload = IOUtils.toString(baseRequest.getInputStream());
             System.out.println("server notification:");
-            Example.prettyPrint(payload);
+            System.out.println(GsonUtil.jsonToPrettyJson(payload));
         }
     }
 }
