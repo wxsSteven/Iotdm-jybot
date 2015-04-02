@@ -2,9 +2,8 @@ package org.opendaylight.iotdm.robot.example;
 
 
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.primitive.enumeration.ResponseType;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
-import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
+import org.opendaylight.iotdm.robot.util.GsonUtil;
 
 /**
  * Created by wenxshi on 3/4/15.
@@ -16,9 +15,11 @@ import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
  */
 public class Example {
     public static void main(String[] args) {
-        RequestPrimitive requestPrimitive = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
         Iotdm iotdm = new Iotdm();
-        iotdm.sendRequestAndGetResponse(requestPrimitive);
+        String methodName = "Set Result Content";
+        RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
+        iotdm.changeAttributeIn(requestPrimitive, methodName, 54321);
+        System.out.println(GsonUtil.toPrettyJson(requestPrimitive));
     }
 }
 
