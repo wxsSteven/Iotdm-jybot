@@ -167,7 +167,7 @@ public class Iotdm {
      * @param name
      * @param value
      */
-    public void addContentAttributeIn(RequestPrimitive requestPrimitive,String name, Object value){
+    public void changeContentAttributeIn(RequestPrimitive requestPrimitive,String name, Object value){
         PrimitiveContent content=requestPrimitive.getContent();
         if(content==null){
             content=new PrimitiveContent();

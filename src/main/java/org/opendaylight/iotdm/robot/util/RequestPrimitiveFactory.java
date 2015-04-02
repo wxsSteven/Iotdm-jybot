@@ -1,8 +1,8 @@
 package org.opendaylight.iotdm.robot.util;
 
 import org.opendaylight.iotdm.onem2m.core.constant.OneM2MName;
+import org.opendaylight.iotdm.constant.enumeration.*;
 import org.opendaylight.iotdm.primitive.*;
-import org.opendaylight.iotdm.primitive.enumeration.*;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;

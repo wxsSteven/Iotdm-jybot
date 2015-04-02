@@ -8,7 +8,7 @@ import org.opendaylight.iotdm.onem2m.core.constant.OneM2MName;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.FilterCriteria;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.primitive.enumeration.*;
+import org.opendaylight.iotdm.constant.enumeration.*;
 
 import java.math.BigInteger;
 import java.util.HashMap;
