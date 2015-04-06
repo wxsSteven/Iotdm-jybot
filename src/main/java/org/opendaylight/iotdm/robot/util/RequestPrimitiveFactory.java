@@ -1,7 +1,7 @@
 package org.opendaylight.iotdm.robot.util;
 
-import org.opendaylight.iotdm.onem2m.core.constant.OneM2MName;
 import org.opendaylight.iotdm.constant.enumeration.*;
+import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -25,7 +25,7 @@ public class RequestPrimitiveFactory {
         attr.setValue("bValue");
         pc.getAny().add(attr);
         attr = new Attribute();
-        attr.setName(OneM2MName.LABELS);
+        attr.setName(OneM2M.Name.Primitive.LABELS.shortName());
         attr.setValue("TV");
 //FilterCriteria Content construction
         FilterCriteria fc = new FilterCriteria();

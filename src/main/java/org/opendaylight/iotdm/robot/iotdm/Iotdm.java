@@ -1,15 +1,19 @@
 package org.opendaylight.iotdm.robot.iotdm;
 
+import org.opendaylight.iotdm.constant.enumeration.AccessControlOperations;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.plugin.Http;
+import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.security.AccessControlContext;
 import java.util.List;
 
 /**
@@ -192,14 +196,14 @@ public class Iotdm {
     }
     
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        Http http = new Http();
-        http.start();
+        Plugin plugin= PluginCenter.getPlugin(requestPrimitive.getTo());
+        plugin.start();
         System.out.println("Request:");
-        String rst = GsonUtil.jsonToPrettyJson(http.sendRequestAndGetResponse(requestPrimitive));
+        String rst = GsonUtil.jsonToPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive));
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);
-        http.close();
+        plugin.close();
         return rst;
     }
 }

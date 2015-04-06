@@ -6,8 +6,8 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.robot.api.OneM2MOperation;
 import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
@@ -23,12 +23,12 @@ import java.io.IOException;
  */
 public class Http implements Plugin {
 
-    public static final int PORT = 8989;
-    public static final String CREATE_IN_HTTP = "post";
-    public static final String RETRIEVE_IN_HTTP = "get";
-    public static final String UPDATE_IN_HTTP = "put";
-    public static final String DELETE_IN_HTTP = "delete";
-    public static final String NOTIFY_IN_HTTP = "post";
+    private static final int PORT = 8989;
+    private static final String CREATE_IN_HTTP = "post";
+    private static final String RETRIEVE_IN_HTTP = "get";
+    private static final String UPDATE_IN_HTTP = "put";
+    private static final String DELETE_IN_HTTP = "delete";
+    private static final String NOTIFY_IN_HTTP = "post";
 
 
     private HttpClient httpClient;
@@ -60,11 +60,11 @@ public class Http implements Plugin {
 
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
         String url = Prepare.uriAdapter(Prepare.uri(requestPrimitive));
-        String payload =Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
+        String payload = Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
 
 
         System.out.println("Uri:");
-        System.out.println(url+"\n");
+        System.out.println(url + "\n");
         System.out.println("Payload:");
         System.out.println(payload);
 
@@ -73,20 +73,22 @@ public class Http implements Plugin {
         if (payload != null && !payload.equals(""))
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
 
-        switch (requestPrimitive.getOperation().intValue()) {
-            case OneM2MOperation.CREATE:
+        OneM2M.Operation x = OneM2M.Operation.CREATE;
+        switch (OneM2M.Operation.getEnum(requestPrimitive.getOperation())) {
+            case CREATE:
+
                 exchange.setMethod(CREATE_IN_HTTP);
                 break;
-            case OneM2MOperation.RETRIEVE:
+            case RETRIEVE:
                 exchange.setMethod(RETRIEVE_IN_HTTP);
                 break;
-            case OneM2MOperation.UPDATE:
+            case UPDATE:
                 exchange.setMethod(UPDATE_IN_HTTP);
                 break;
-            case OneM2MOperation.DELETE:
+            case DELETE:
                 exchange.setMethod(DELETE_IN_HTTP);
                 break;
-            case OneM2MOperation.NOTIFY:
+            case NOTIFY:
                 exchange.setMethod(NOTIFY_IN_HTTP);
             default:
                 return null;

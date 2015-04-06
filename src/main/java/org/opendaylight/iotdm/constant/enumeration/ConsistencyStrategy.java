@@ -1,5 +1,7 @@
 package org.opendaylight.iotdm.constant.enumeration;
 
+import org.opendaylight.iotdm.primitive.AE;
+
 import java.math.BigInteger;
 
 /**

@@ -1,9 +1,10 @@
 package org.opendaylight.iotdm.robot.example;
 
-
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
-import org.opendaylight.iotdm.robot.util.GsonUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by wenxshi on 3/4/15.
@@ -16,10 +17,9 @@ import org.opendaylight.iotdm.robot.util.GsonUtil;
 public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
-        String methodName = "Set Result Content";
         RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
-        iotdm.changeAttributeIn(requestPrimitive, methodName, 54321);
-        System.out.println(GsonUtil.toPrettyJson(requestPrimitive));
+        requestPrimitive.setTo("coap://localhost:5683");
+        iotdm.sendRequestAndGetResponse(requestPrimitive);
     }
 }
 
