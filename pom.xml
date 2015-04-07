@@ -35,6 +35,13 @@
             <artifactId>californium-core</artifactId>
             <version>1.0.0-M3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.wuokko.robot</groupId>
+            <artifactId>robotframework-rest-java</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
