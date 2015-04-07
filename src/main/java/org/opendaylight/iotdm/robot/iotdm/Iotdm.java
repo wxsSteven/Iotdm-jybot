@@ -7,10 +7,13 @@ import org.opendaylight.iotdm.robot.plugin.Http;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 
+import java.lang.System;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.List;
+
+
 
 /**
  * Created by wenxshi on 3/31/15.
@@ -78,6 +81,7 @@ public class Iotdm {
         this.port = port;
         this.schema = schema;
     }
+
 
     public RequestPrimitive getInitilazedRequestPrimitive() {
         return RequestPrimitiveFactory.makeDefaultRequestPrimitive();
@@ -213,4 +217,35 @@ public class Iotdm {
         http.close();
         return rst;
     }
+
+    public String getHierURI (String output){
+        try{
+            String[] inputlist = output.split("path:");
+            // String[1] = InCSE1/10057,Non-hierarchical
+
+            String[] hierlist = inputlist[1].split(",");
+            System.out.println(hierlist[0]);
+            return hierlist[0];
+        }catch(Exception pe){
+            System.out.println("Cannot find path in:" + output);
+            System.out.println(pe);
+            return null;
+        }
+    }
+
+    public String getNonHierURI (String output){
+        try{
+            String[] inputlist = output.split("path:");
+            // String[2] = InCSE1/1609248733" ...
+
+            String[] hierlist = inputlist[2].split("\"");
+            System.out.println(hierlist[0]);
+            return hierlist[0];
+        }catch(Exception pe){
+            System.out.println("Cannot find path in:" + output);
+            System.out.println(pe);
+            return null;
+        }
+    }
+    // test the for loops in the robot framework?
 }
