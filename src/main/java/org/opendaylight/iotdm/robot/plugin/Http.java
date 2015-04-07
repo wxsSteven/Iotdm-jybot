@@ -17,12 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by wenxshi on 3/30/15.
  */
 public class Http implements Plugin {
 
+    public static final String SCHEME="http";
     public static final int PORT = 8989;
     public static final String CREATE_IN_HTTP = "post";
     public static final String RETRIEVE_IN_HTTP = "get";
@@ -58,8 +61,9 @@ public class Http implements Plugin {
         }
     }
 
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        String url = Prepare.uriAdapter(Prepare.uri(requestPrimitive));
+    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port) {
+
+        String url = Prepare.uriAdapter(SCHEME+"://"+host+":"+port+Prepare.uri(requestPrimitive));
         String payload =Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
 
 

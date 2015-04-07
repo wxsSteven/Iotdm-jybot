@@ -49,7 +49,7 @@ public class RequestPrimitiveFactory {
 //RequestPrimitive Constuction
         RequestPrimitive request = new RequestPrimitive();
         request.setOperation(BigInteger.ONE);
-        request.setTo("http://localhost:8282/InCSE1");
+        request.setTo("/InCSE1");
         request.setFrom("http://localhost:8989");
         request.setRequestIdentifier("1234");
         request.setResourceType(ResourceType.AE.getValue());

@@ -16,12 +16,15 @@ import java.util.List;
  * Created by wenxshi on 3/31/15.
  */
 public class Iotdm {
-    public static final String HOST = "localhost:8282";
+    private String host = "localhost";
+    private String port = "8282";
+    private String schema = "http";
+
 
     /**
      * {
      * "operation": 1,
-     * "to": "http://localhost:8282/InCSE1",
+     * "to": "/InCSE1",
      * "from": "http://localhost:8989",
      * "requestIdentifier": "1234",
      * "resourceType": 2,
@@ -69,6 +72,12 @@ public class Iotdm {
      *
      * @return
      */
+
+    public void setAccessServer(String host, String port, String schema) {
+        this.host = host;
+        this.port = port;
+        this.schema = schema;
+    }
 
     public RequestPrimitive getInitilazedRequestPrimitive() {
         return RequestPrimitiveFactory.makeDefaultRequestPrimitive();
@@ -126,16 +135,17 @@ public class Iotdm {
             for (Method method : object.getClass().getMethods()) {
                 if (methodName.equalsIgnoreCase(method.getName())) {
                     Class clazz = method.getParameterTypes()[0];
-                    if (clazz.equals(BigInteger.class))
+
+                    if (newValue != null && clazz.equals(BigInteger.class))
                         method.invoke(object, new BigInteger(newValue.toString()));
-                    else if (clazz.equals(String.class))
+                    else if (newValue != null && clazz.equals(String.class))
                         method.invoke(object, newValue.toString());
                     else
                         method.invoke(object, newValue);
                     return;
                 }
             }
-            throw new AssertionError ("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
+            throw new AssertionError("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -150,7 +160,7 @@ public class Iotdm {
         try {
             for (Method method : object.getClass().getMethods()) {
                 if (methodName.equalsIgnoreCase(method.getName())) {
-                    return method.invoke(object,null);
+                    return method.invoke(object, null);
                 }
             }
 
@@ -159,43 +169,44 @@ public class Iotdm {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        throw new AssertionError ("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
+        throw new AssertionError("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
     }
 
     /**
      * This method is only for the old ODL testing, it will be removed in near future.
+     *
      * @param name
      * @param value
      */
-    public void changeContentAttributeIn(RequestPrimitive requestPrimitive,String name, Object value){
-        PrimitiveContent content=requestPrimitive.getContent();
-        if(content==null){
-            content=new PrimitiveContent();
+    public void changeContentAttributeIn(RequestPrimitive requestPrimitive, String name, Object value) {
+        PrimitiveContent content = requestPrimitive.getContent();
+        if (content == null) {
+            content = new PrimitiveContent();
         }
-        List<Object> list=content.getAny();
+        List<Object> list = content.getAny();
 
-        for(Object object:list){
-            Attribute attr=(Attribute) object;
-            if(attr.getName().equals(name)){
-                if(value==null)
+        for (Object object : list) {
+            Attribute attr = (Attribute) object;
+            if (attr.getName().equals(name)) {
+                if (value == null)
                     list.remove(attr);
-                else{
+                else {
                     attr.setValue(value);
                 }
                 return;
             }
         }
-        Attribute attr=new Attribute();
+        Attribute attr = new Attribute();
         attr.setName(name);
         attr.setValue(value);
         list.add(attr);
     }
-    
+
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
         Http http = new Http();
         http.start();
         System.out.println("Request:");
-        String rst = GsonUtil.jsonToPrettyJson(http.sendRequestAndGetResponse(requestPrimitive));
+        String rst = GsonUtil.jsonToPrettyJson(http.sendRequestAndGetResponse(requestPrimitive, host, port));
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);

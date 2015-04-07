@@ -16,10 +16,10 @@ import org.opendaylight.iotdm.robot.util.GsonUtil;
 public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
-        String methodName = "Set Result Content";
         RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
-        iotdm.changeAttributeIn(requestPrimitive, methodName, 54321);
-        System.out.println(GsonUtil.toPrettyJson(requestPrimitive));
+        iotdm.changeAttributeIn(requestPrimitive,"Set to","/InCSE1");
+        String rst=iotdm.sendRequestAndGetResponse(requestPrimitive);
+        System.out.println(rst);
     }
 }
 

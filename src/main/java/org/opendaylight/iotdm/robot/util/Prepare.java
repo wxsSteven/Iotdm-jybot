@@ -11,6 +11,7 @@ import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.constant.enumeration.*;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,14 @@ public class Prepare {
     public static String uri(RequestPrimitive requestPrimitive) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(requestPrimitive.getTo());
+        String path="";
+        try{
+           path=new URI(requestPrimitive.getTo()).getPath();
+        }catch(Exception e){
+            System.out.println("Not valid uri");
+        }
+
+        sb.append(path);
         sb.append("?");
         if (requestPrimitive.getFrom() != null)
             sb.append(OneM2MName.FROM + "=" + requestPrimitive.getFrom() + "&");
