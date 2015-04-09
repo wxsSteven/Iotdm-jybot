@@ -2,12 +2,12 @@
 Library     org.opendaylight.iotdm.robot.iotdm.Iotdm
 
 *** Test Cases ***
-#example Create
-#    ${requestPrimitive} =    Get Initilazed Create Request Primitive
-#    Change Attribute In     ${requestPrimitive}   Set Request Identifier     54321
-#    Change Content Attribute In  ${requestPrimitive}    hahah     3123
-#    ${result} =  Send Request And GetResponse   ${requestPrimitive}
-#    Should Contain  ${result}   "output"
+example Create
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Request Identifier     54321
+    Change Content Attribute In  ${requestPrimitive}    hahah     3123
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   "output"
 
 
 #------------Create "to" attribute test---------------------------
@@ -15,23 +15,23 @@ Library     org.opendaylight.iotdm.robot.iotdm.Iotdm
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set To   ${null}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
-    Should Contain   ${result}   rpcerror
+    Should Contain   ${result}   Error
 
-    
+
 100.1 Create: "to" is invalid
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set To  /abc
     ${result} =     Send Request And Get Response  ${requestPrimitive}
-    Should Contain   ${result}   rpcerror
+    Should Contain   ${result}   Error
 
 100.2 Create: "to" is valid
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set To  /InCSE1
     ${result} =     Send Request And Get Response  ${requestPrimitive}
-    Should Contain   ${result}   path:
+    Should Contain   ${result}   Output
 
 #---------------Create "from" attribute test-----------------
-102.0 Create:"from" is null
+101.0 Create:"from" is null
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set From  ${null}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
@@ -39,7 +39,7 @@ Library     org.opendaylight.iotdm.robot.iotdm.Iotdm
 
 
 #-----------------Create "requestIdentifer" attribute test
-103.0 Create:"requestIdentifer" is null
+102.0 Create:"requestIdentifer" is null
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set Request Identifier  ${null}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
@@ -47,33 +47,187 @@ Library     org.opendaylight.iotdm.robot.iotdm.Iotdm
 
 
 #------------------Create "resourceType" attribute test--------------
-104.0 Create:"resourceType" is null
+103.0 Create:"resourceType" is null
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set Resource Type  ${null}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
     Should Contain   ${result}   Lack of mandatory attribute
 
-104.1 Create:"resourceType" is invalid
+103.1 Create:"resourceType" is invalid
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set Resource Type  1000000
     ${result} =     Send Request And Get Response  ${requestPrimitive}
     Should Contain   ${result}   rpcError
 
-104.1 Create:"resourceType" is valid
+103.1 Create:"resourceType" is valid
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set Resource Type  3
     ${result} =     Send Request And Get Response  ${requestPrimitive}
     Should Contain   ${result}   container
 
 #----------------------Create "content" attribute test---------------
-106.0 Create:"content" is null
+105.0 Create:"content" is null
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     change Attribute In     ${requestPrimitive}     Set Content  ${null}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
     Should Contain   ${result}   Lack of mandatory attribute
 
-106.1 Create:"content" is invalid
+105.1 Create:"content" is invalid
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
-    change Attribute In     ${requestPrimitive}     Set Content  {"a":"b"}
+    change Content Attribute In     ${requestPrimitive}   a   1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Output
+
+
+#----------------------Create "originateTimeStamp" attribute test---------------
+#----------------------Create "requesteExperationTimeStamp" attribute test---------------
+#----------------------Create "resultExpirationTime" attribute test---------------
+#----------------------Create "operationExecutionTime" attribute test---------------
+#----------------------Create "responseType" attribute test---------------
+#----------------------Create "resultPersistence" attribute test---------------
+#----------------------Create "resultContent" attribute test---------------
+#----------------------Create "eventCategory" attribute test---------------
+#----------------------Create "deliveryAggregation" attribute test---------------
+#----------------------Create "groupRequestIdentifier" attribute test---------------
+
+
+#------------Update "to" attribute test---------------------------
+200.0 Update: "to" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To   ${null}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+
+200.1 Update: "to" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /abc
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+200.2 Update: "to" is valid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Output
+
+#---------------Update "from" attribute test-----------------
+201.0 Update:"from" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set From  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
     ${result} =     Send Request And Get Response  ${requestPrimitive}
     Should Contain   ${result}   Lack of mandatory attribute
+
+
+#-----------------Update "requestIdentifer" attribute test
+202.0 Update:"requestIdentifer" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Request Identifier  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Lack of mandatory attribute
+
+
+#------------------Update "resourceType" attribute test--------------
+203.0 Update:"resourceType" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  ${null}
+    change Attribute In     ${requestPrimitive}     Set To   InCSE1/10006
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+203.1 Update:"resourceType" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  1000000
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+203.2 Update:"resourceType" is valid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  3
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+#----------------------Update "content" attribute test---------------
+205.0 Update:"content" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Content  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+205.1 Update:"content" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Update Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    change Content Attribute In     ${requestPrimitive}   a   1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+
+#----------------------Update "originateTimeStamp" attribute test---------------
+#----------------------Update "requesteExperationTimeStamp" attribute test---------------
+#----------------------Update "resultExpirationTime" attribute test---------------
+#----------------------Update "operationExecutionTime" attribute test---------------
+#----------------------Update "responseType" attribute test---------------
+#----------------------Update "resultPersistence" attribute test---------------
+#----------------------Update "resultContent" attribute test---------------
+#----------------------Update "eventCategory" attribute test---------------
+#----------------------Update "deliveryAggregation" attribute test---------------
+#----------------------Update "groupRequestIdentifier" attribute test---------------
+
+
+
+

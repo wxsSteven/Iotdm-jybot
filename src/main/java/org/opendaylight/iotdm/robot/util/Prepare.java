@@ -36,6 +36,8 @@ public class Prepare {
         String path="";
         try{
            path=new URI(requestPrimitive.getTo()).getPath();
+            if(!path.startsWith("/"))
+                path="/"+path;
         }catch(Exception e){
             System.out.println("Not valid uri");
         }
@@ -90,7 +92,6 @@ public class Prepare {
         String result = sb.toString();
         if (result.endsWith("?"))
             result = result.substring(0, result.length());
-
         return result;
     }
 

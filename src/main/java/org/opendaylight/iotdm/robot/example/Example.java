@@ -4,6 +4,10 @@ package org.opendaylight.iotdm.robot.example;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
+import org.opendaylight.iotdm.robot.util.Prepare;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by wenxshi on 3/4/15.
@@ -17,9 +21,13 @@ public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
         RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
-        iotdm.changeAttributeIn(requestPrimitive,"Set to","/InCSE1");
-        String rst=iotdm.sendRequestAndGetResponse(requestPrimitive);
-        System.out.println(rst);
+
+        requestPrimitive.setTo("InCSE1/Base");
+        String url="http"+"://"+"localhost"+":"+"8282"+Prepare.uri(requestPrimitive);
+        System.out.println(url);
+        url = Prepare.uriAdapter(url);
+        System.out.println(url);
+
     }
 }
 

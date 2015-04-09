@@ -1,5 +1,6 @@
 package org.opendaylight.iotdm.robot.iotdm;
 
+import org.opendaylight.iotdm.constant.enumeration.Operation;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
@@ -93,6 +94,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedCreateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        rp.setOperation(Operation.CREATE.getValue());
         rp.setFilterCriteria(null);
         rp.setDiscoveryResultType(null);
         return rp;
@@ -100,6 +102,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedRetrieveRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        rp.setOperation(Operation.RETRIEVE.getValue());
         rp.setResourceType(null);
         rp.setName(null);
         return rp;
@@ -107,6 +110,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedUpdateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        rp.setOperation(Operation.UPDATE.getValue());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setDiscoveryResultType(null);
@@ -115,6 +119,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedDeleteRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        rp.setOperation(Operation.DELETE.getValue());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setContent(null);
@@ -124,6 +129,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedNotifyRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        rp.setOperation(Operation.NOTIFY.getValue());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setResultPersistence(null);
