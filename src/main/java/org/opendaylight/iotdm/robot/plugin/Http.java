@@ -24,6 +24,7 @@ import java.io.IOException;
 public class Http implements Plugin {
 
     private static final int PORT = 8989;
+    private static final String SCHEMA="http";
     private static final String CREATE_IN_HTTP = "post";
     private static final String RETRIEVE_IN_HTTP = "get";
     private static final String UPDATE_IN_HTTP = "put";
@@ -58,9 +59,10 @@ public class Http implements Plugin {
         }
     }
 
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        String url = Prepare.uriAdapter(Prepare.uri(requestPrimitive));
-        String payload = Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
+    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port, String timeout) {
+        ContentExchange exchange = new ContentExchange();
+        String url = Prepare.uri(requestPrimitive,host,port,SCHEMA).toString();
+        String payload =Prepare.payload(requestPrimitive);
 
 
         System.out.println("Uri:");
@@ -68,15 +70,16 @@ public class Http implements Plugin {
         System.out.println("Payload:");
         System.out.println(payload);
 
-        ContentExchange exchange = new ContentExchange();
+
         exchange.setURL(url);
+
+
         if (payload != null && !payload.equals(""))
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
 
         OneM2M.Operation x = OneM2M.Operation.CREATE;
         switch (OneM2M.Operation.getEnum(requestPrimitive.getOperation())) {
             case CREATE:
-
                 exchange.setMethod(CREATE_IN_HTTP);
                 break;
             case RETRIEVE:
@@ -95,6 +98,7 @@ public class Http implements Plugin {
         }
         return send(exchange);
     }
+
 
     private String send(ContentExchange exchange) {
         try {

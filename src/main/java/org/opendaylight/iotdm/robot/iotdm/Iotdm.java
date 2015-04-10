@@ -1,11 +1,9 @@
 package org.opendaylight.iotdm.robot.iotdm;
 
-import org.opendaylight.iotdm.constant.enumeration.AccessControlOperations;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.api.Plugin;
-import org.opendaylight.iotdm.robot.plugin.Http;
 import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
@@ -13,14 +11,15 @@ import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.security.AccessControlContext;
 import java.util.List;
 
 /**
  * Created by wenxshi on 3/31/15.
  */
 public class Iotdm {
-    public static final String HOST = "localhost:8282";
+    private String host = "localhost";
+    private String port = "8282";
+    private String timeout="10000";
 
     /**
      * {
@@ -73,6 +72,24 @@ public class Iotdm {
      *
      * @return
      */
+
+    public void setAccessPoint(String host, String port,String timeout) {
+        this.host = host;
+        this.port = port;
+        this.timeout=timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
 
     public RequestPrimitive getInitilazedRequestPrimitive() {
         return RequestPrimitiveFactory.makeDefaultRequestPrimitive();
@@ -139,7 +156,7 @@ public class Iotdm {
                     return;
                 }
             }
-            throw new AssertionError ("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
+            throw new AssertionError("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -154,7 +171,7 @@ public class Iotdm {
         try {
             for (Method method : object.getClass().getMethods()) {
                 if (methodName.equalsIgnoreCase(method.getName())) {
-                    return method.invoke(object,null);
+                    return method.invoke(object, null);
                 }
             }
 
@@ -163,43 +180,44 @@ public class Iotdm {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        throw new AssertionError ("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
+        throw new AssertionError("No methond called \"" + methodName + "\" in " + object.getClass().getName() + ".class");
     }
 
     /**
      * This method is only for the old ODL testing, it will be removed in near future.
+     *
      * @param name
      * @param value
      */
-    public void changeContentAttributeIn(RequestPrimitive requestPrimitive,String name, Object value){
-        PrimitiveContent content=requestPrimitive.getContent();
-        if(content==null){
-            content=new PrimitiveContent();
+    public void changeContentAttributeIn(RequestPrimitive requestPrimitive, String name, Object value) {
+        PrimitiveContent content = requestPrimitive.getContent();
+        if (content == null) {
+            content = new PrimitiveContent();
         }
-        List<Object> list=content.getAny();
+        List<Object> list = content.getAny();
 
-        for(Object object:list){
-            Attribute attr=(Attribute) object;
-            if(attr.getName().equals(name)){
-                if(value==null)
+        for (Object object : list) {
+            Attribute attr = (Attribute) object;
+            if (attr.getName().equals(name)) {
+                if (value == null)
                     list.remove(attr);
-                else{
+                else {
                     attr.setValue(value);
                 }
                 return;
             }
         }
-        Attribute attr=new Attribute();
+        Attribute attr = new Attribute();
         attr.setName(name);
         attr.setValue(value);
         list.add(attr);
     }
-    
+
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        Plugin plugin= PluginCenter.getPlugin(requestPrimitive.getTo());
+        Plugin plugin = PluginCenter.getPlugin(requestPrimitive.getTo());
         plugin.start();
         System.out.println("Request:");
-        String rst = GsonUtil.jsonToPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive));
+        String rst = GsonUtil.jsonToPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive,host,port,timeout));
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);

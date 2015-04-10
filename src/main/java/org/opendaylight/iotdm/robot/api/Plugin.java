@@ -8,5 +8,5 @@ import org.opendaylight.iotdm.primitive.RequestPrimitive;
 public interface Plugin {
     void start();
     void close();
-    String sendRequestAndGetResponse(RequestPrimitive requestPrimitive);
+    String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port,String timeout);
 }
