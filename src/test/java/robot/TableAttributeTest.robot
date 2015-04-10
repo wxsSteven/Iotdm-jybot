@@ -93,10 +93,6 @@ example Create
 
 #------------Update "to" attribute test---------------------------
 200.0 Update: "to" is null
-    ${requestPrimitive} =    Get Initilazed Create Request Primitive
-    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
-    ${result} =     Send Request And Get Response  ${requestPrimitive}
-    ${to} =     Get Hier URI    ${result}
 
     ${requestPrimitive} =    Get Initilazed Update Request Primitive
     change Attribute In     ${requestPrimitive}     Set To   ${null}
@@ -230,4 +226,136 @@ example Create
 
 
 
+#------------Retrieve "to" attribute test---------------------------
+300.0 Retrieve: "to" is null
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To   ${null}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+
+300.1 Retrieve: "to" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /abc
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+300.2 Retrieve: "to" is valid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Output
+
+#---------------Retrieve "from" attribute test-----------------
+301.0 Retrieve:"from" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set From  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Lack of mandatory attribute
+
+
+#-----------------Retrieve "requestIdentifer" attribute test
+302.0 Retrieve:"requestIdentifer" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Request Identifier  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Lack of mandatory attribute
+
+
+#------------------Retrieve "resourceType" attribute test--------------
+303.0 Retrieve:"resourceType" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  ${null}
+    change Attribute In     ${requestPrimitive}     Set To   InCSE1/10006
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+303.1 Retrieve:"resourceType" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  1000000
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+303.2 Retrieve:"resourceType" is valid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Resource Type  3
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   output
+
+#----------------------Retrieve "content" attribute test---------------
+305.0 Retrieve:"content" is null
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set Content  ${null}
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+305.1 Retrieve:"content" is invalid
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  /InCSE1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    ${to} =     Get Hier URI    ${result}
+
+    ${requestPrimitive} =    Get Initilazed Retrieve Request Primitive
+    change Attribute In     ${requestPrimitive}     Set To  ${to}
+    change Content Attribute In     ${requestPrimitive}   a   1
+    ${result} =     Send Request And Get Response  ${requestPrimitive}
+    Should Contain   ${result}   Error
+
+
+#----------------------Retrieve "originateTimeStamp" attribute test---------------
+#----------------------Retrieve "requesteExperationTimeStamp" attribute test---------------
+#----------------------Retrieve "resultExpirationTime" attribute test---------------
+#----------------------Retrieve "operationExecutionTime" attribute test---------------
+#----------------------Retrieve "responseType" attribute test---------------
+#----------------------Retrieve "resultPersistence" attribute test---------------
+#----------------------Retrieve "resultContent" attribute test---------------
+#----------------------Retrieve "eventCategory" attribute test---------------
+#----------------------Retrieve "deliveryAggregation" attribute test---------------
+#----------------------Retrieve "groupRequestIdentifier" attribute test---------------
 
