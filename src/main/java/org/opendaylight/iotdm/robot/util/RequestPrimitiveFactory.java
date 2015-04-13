@@ -1,6 +1,5 @@
 package org.opendaylight.iotdm.robot.util;
 
-import org.opendaylight.iotdm.constant.enumeration.*;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
 
@@ -16,17 +15,11 @@ public class RequestPrimitiveFactory {
     public static RequestPrimitive makeDefaultRequestPrimitive() {
 //PrimitiveContent construction
         PrimitiveContent pc = new PrimitiveContent();
-        Attribute attr = new Attribute();
-        attr.setName("aName");
-        attr.setValue("aValue");
-        pc.getAny().add(attr);
-        attr = new Attribute();
-        attr.setName("bValue");
-        attr.setValue("bValue");
-        pc.getAny().add(attr);
-        attr = new Attribute();
-        attr.setName(OneM2M.Name.Primitive.LABELS.shortName());
-        attr.setValue("TV");
+        AE ae=new AE();
+        ae.setAEID("AE_ID");
+        ae.setAppName("iphone");
+        ae.setOntologyRef("http://hey/you");
+        pc.getAny().add(ae);
 //FilterCriteria Content construction
         FilterCriteria fc = new FilterCriteria();
         fc.setCreatedAfter("12345");
@@ -52,26 +45,26 @@ public class RequestPrimitiveFactory {
         request.setTo("http://localhost:8282/InCSE1");
         request.setFrom("http://localhost:8989");
         request.setRequestIdentifier("1234");
-        request.setResourceType(ResourceType.AE.getValue());
+        request.setResourceType(OneM2M.ResourceType.AE.value());
         request.setName("AE");
         request.setContent(pc);
         request.setOriginatingTimestamp("100000");
         request.setRequestExpirationTimestamp("200000");
         request.setResultExpirationTimestamp("200000");
         request.setOperationExecutionTime("100000");
-        request.setResponseType(ResponseType.BLOCKING_REQUEST.getValue());
+        request.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
         try {
             request.setResultPersistence(DatatypeFactory.newInstance().newDuration(10000000));
         } catch (DatatypeConfigurationException e) {
             e.printStackTrace();
         }
 
-        request.setResultContent(ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.getValue());
-        request.setEventCategory(StdEventCats.DEFAULT.getInterpretation());
+        request.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.value());
+        request.setEventCategory(OneM2M.StdEventCats.DEFAULT.value().toString());
         request.setDeliveryAggregation(true);
         request.setGroupRequestIdentifier("12345");
         request.setFilterCriteria(fc);
-        request.setDiscoveryResultType(DiscResType.HIERARCHICAL.getValue());
+        request.setDiscoveryResultType(OneM2M.DiscResType.HIERARCHICAL.value());
         return request;
     }
 }

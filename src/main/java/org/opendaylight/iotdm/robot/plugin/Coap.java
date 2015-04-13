@@ -11,6 +11,7 @@ import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 import org.opendaylight.iotdm.robot.api.Plugin;
+import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
 
 import java.math.BigInteger;
@@ -20,8 +21,9 @@ import java.math.BigInteger;
  */
 public class Coap implements Plugin {
     public static final String SCHEMA = "coap";
+    public static final int PORT=65432;
 
-    private CoapServer server = new CoapServer() {
+    private CoapServer server = new CoapServer(PORT) {
         @Override
         public org.eclipse.californium.core.server.resources.Resource createRoot() {
             return new RootResource();
@@ -63,8 +65,8 @@ public class Coap implements Plugin {
                 return null;
         }
 
-        String payload = Prepare.payload(requestPrimitive);
-        String uri = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
+        String uri =Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
+        String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
 
         request.setURI(uri);
         request.setPayload(payload);
@@ -133,6 +135,8 @@ public class Coap implements Plugin {
     private void prepareOptions(RequestPrimitive requestPrimitive, OptionSet os) {
 
         //option build
+        os.setContentFormat(MediaTypeRegistry.APPLICATION_JSON);
+
         if (requestPrimitive.getFrom() != null)
             os.addOption(new Option(OneM2M.CoAP.Option.ONEM2M_FR.value(), requestPrimitive.getFrom()));
 
