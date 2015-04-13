@@ -18,7 +18,7 @@ public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
         RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
-        requestPrimitive.setTo("coap://localhost:5683");
+        requestPrimitive.setTo("coap://localhost:6853/apple/ae");
         iotdm.sendRequestAndGetResponse(requestPrimitive);
     }
 }

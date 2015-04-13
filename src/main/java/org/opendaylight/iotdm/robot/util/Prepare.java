@@ -23,7 +23,8 @@ public class Prepare {
         } catch (URISyntaxException e) {
             ub=new URIBuilder();
         }
-
+        if(!ub.getPath().startsWith("/"))
+            ub.setPath("/"+ub.getPath());
 
         if(ub.getHost()==null)
             ub.setHost(host);
@@ -31,8 +32,7 @@ public class Prepare {
         if(ub.getPort()<0)
            ub.setPort(Integer.valueOf(port));
 
-        if(ub.getScheme()==null)
-            ub.setScheme(schema);
+        ub.setScheme(schema);
 
         if(requestPrimitive.getResponseType()!=null)
             ub.addParameter(OneM2M.Name.Primitive.RESOURCE_TYPE.toString(),requestPrimitive.getResponseType().toString());

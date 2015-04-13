@@ -11,6 +11,8 @@ import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -19,7 +21,8 @@ import java.util.List;
 public class Iotdm {
     private String host = "localhost";
     private String port = "8282";
-    private String timeout="10000";
+    private String timeout = "5000";
+    private String schema = "http";
 
     /**
      * {
@@ -73,10 +76,10 @@ public class Iotdm {
      * @return
      */
 
-    public void setAccessPoint(String host, String port,String timeout) {
+    public void setAccessPoint(String host, String port, String timeout) {
         this.host = host;
         this.port = port;
-        this.timeout=timeout;
+        this.timeout = timeout;
     }
 
     public void setTimeout(String timeout) {
@@ -214,10 +217,18 @@ public class Iotdm {
     }
 
     public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        Plugin plugin = PluginCenter.getPlugin(requestPrimitive.getTo());
+        Plugin plugin = PluginCenter.getPlugin(schema);
+        try {
+            URI uri = new URI(requestPrimitive.getTo());
+            if(uri.getScheme()!=null)
+                plugin = PluginCenter.getPlugin(uri.getScheme());
+        } catch (URISyntaxException e) {
+            System.out.println();
+        }
+
         plugin.start();
         System.out.println("Request:");
-        String rst = GsonUtil.jsonToPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive,host,port,timeout));
+        String rst = GsonUtil.jsonToPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout));
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);

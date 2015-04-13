@@ -483,7 +483,15 @@ public class OneM2M {
 
             private int number;
 
-            public int value() {
+            public static Option getEnum(int number) {
+                for (OneM2M.CoAP.Option option : OneM2M.CoAP.Option.values()) {
+                    if (option.number == number)
+                        return option;
+                }
+                return null;
+            }
+
+            public int value(){
                 return number;
             }
 
@@ -496,24 +504,18 @@ public class OneM2M {
     public static class Http {
         public static String NAME = "http";
 
-        public enum Option {
-            ONEM2M_FR(256),
-            ONEM2M_RQI(257),
-            ONEM2M_NM(258),
-            ONEM2M_OT(259),
-            ONEM2M_RQET(260),
-            ONEM2M_RSET(261),
-            ONEM2M_OET(262),
-            ONEM2M_RTURI(263),
-            ONEM2M_EC(264),
-            ONEM2M_RSC(265),
-            ONEM2M_GID(266);
-
-            private int number;
-
-            Option(int number) {
-                this.number = number;
-            }
+        public static class Header {
+            public static final String X_M2M_ORIGIN = "X-M2M-Origin";
+            public static final String X_M2M_RI = "X-M2M-RI";
+            public static final String X_M2M_NM = "X-M2M-NM";
+            public static final String X_M2M_GID = "X-M2M-GID";
+            public static final String X_M2M_RTU = "X-M2M-RTU";
+            public static final String X_M2M_OT = "X-M2M-OT";
+            public static final String X_M2M_RST = "X-M2M-RST";
+            public static final String X_M2M_RET = "X-M2M-RET";
+            public static final String X_M2M_OET = "X-M2M-OET";
+            public static final String X_M2M_EC = "X-M2M-EC";
+            public static final String X_M2M_RSC = "X-M2M-RSC";
         }
     }
 
@@ -562,7 +564,7 @@ public class OneM2M {
             this.value = value;
         }
 
-        public static ResponseStatusCodes getEnum(BigInteger number){
+        public static ResponseStatusCodes getEnum(BigInteger number) {
             for (OneM2M.ResponseStatusCodes code : OneM2M.ResponseStatusCodes.values()) {
                 if (code.value.equals(number))
                     return code;

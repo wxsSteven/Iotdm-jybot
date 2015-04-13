@@ -1,13 +1,17 @@
 package org.opendaylight.iotdm.robot.plugin;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.http.HttpFields;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
@@ -17,19 +21,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * Created by wenxshi on 3/30/15.
  */
 public class Http implements Plugin {
 
-    private static final int PORT = 8989;
-    private static final String SCHEMA="http";
-    private static final String CREATE_IN_HTTP = "post";
-    private static final String RETRIEVE_IN_HTTP = "get";
-    private static final String UPDATE_IN_HTTP = "put";
-    private static final String DELETE_IN_HTTP = "delete";
-    private static final String NOTIFY_IN_HTTP = "post";
+    public static final int PORT = 8989;
+    public static final String SCHEMA = "http";
+    public static final String CREATE_IN_HTTP = "post";
+    public static final String RETRIEVE_IN_HTTP = "get";
+    public static final String UPDATE_IN_HTTP = "put";
+    public static final String DELETE_IN_HTTP = "delete";
+    public static final String NOTIFY_IN_HTTP = "post";
 
 
     private HttpClient httpClient;
@@ -59,23 +64,15 @@ public class Http implements Plugin {
         }
     }
 
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port, String timeout) {
+    public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive, String host, String port, String timeout) {
         ContentExchange exchange = new ContentExchange();
-        String url = Prepare.uri(requestPrimitive,host,port,SCHEMA).toString();
-        String payload =Prepare.payload(requestPrimitive);
-
-
-        System.out.println("Uri:");
-        System.out.println(url + "\n");
-        System.out.println("Payload:");
-        System.out.println(payload);
-
+        String url = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
+        String payload = Prepare.payload(requestPrimitive);
 
         exchange.setURL(url);
-
-
         if (payload != null && !payload.equals(""))
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
+        prepareHeader(requestPrimitive, exchange);
 
         OneM2M.Operation x = OneM2M.Operation.CREATE;
         switch (OneM2M.Operation.getEnum(requestPrimitive.getOperation())) {
@@ -96,20 +93,104 @@ public class Http implements Plugin {
             default:
                 return null;
         }
-        return send(exchange);
+
+        System.out.println("Uri:");
+        System.out.println(url + "\n");
+        System.out.println("Header:");
+        System.out.println(exchange.getRequestFields().toString() + "\n");
+        System.out.println("Payload:");
+        System.out.println(payload);
+
+
+        try {
+            httpClient.setTimeout(Long.valueOf(timeout));
+            httpClient.send(exchange);
+
+        } catch (Exception e) {
+        }
+        ResponsePrimitive responsePrimitive = prepareResponsePrimitive(exchange);
+        return responsePrimitive;
+    }
+
+    private ResponsePrimitive prepareResponsePrimitive(ContentExchange exchange) {
+        ResponsePrimitive responsePrimitive = new ResponsePrimitive();
+
+        HttpFields fields = exchange.getResponseFields();
+        for (String key : fields.getFieldNamesCollection()) {
+            switch (key) {
+                case OneM2M.Http.Header.X_M2M_RSC:
+                    responsePrimitive.setResponseStatusCode(BigInteger.valueOf(fields.getDateField(key)));
+                    break;
+                case OneM2M.Http.Header.X_M2M_RI:
+                    responsePrimitive.setRequestIdentifier(fields.getStringField(key));
+                    break;
+                case OneM2M.Http.Header.X_M2M_ORIGIN:
+                    responsePrimitive.setFrom(fields.getStringField(key));
+                    break;
+                case OneM2M.Http.Header.X_M2M_OT:
+                    responsePrimitive.setOriginatingTimestamp(fields.getStringField(key));
+                    break;
+                case OneM2M.Http.Header.X_M2M_RST:
+                    responsePrimitive.setResultExpirationTimestamp(fields.getStringField(key));
+                    break;
+                case OneM2M.Http.Header.X_M2M_EC:
+                    responsePrimitive.setEventCategory(fields.getStringField(key));
+            }
+        }
+
+
+        try {
+            String payload = exchange.getResponseContent();
+            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) {
+                responsePrimitive.getContent().getAny().add(array.get(i).toString());
+            }
+        } catch (Exception e) {
+
+        }
+        return responsePrimitive;
     }
 
 
-    private String send(ContentExchange exchange) {
-        try {
-            httpClient.send(exchange);
-            exchange.waitForDone();
-            return exchange.getResponseContent();
-        } catch (IOException e) {
-            return e.getMessage();
-        } catch (InterruptedException e) {
-            return e.getMessage();
-        }
+    private void prepareHeader(RequestPrimitive requestPrimitive, ContentExchange exchange) {
+        if (requestPrimitive.getFrom() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_ORIGIN, requestPrimitive.getFrom());
+
+
+        if (requestPrimitive.getRequestIdentifier() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_RI, requestPrimitive.getRequestIdentifier());
+
+
+        if (requestPrimitive.getName() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_NM, requestPrimitive.getName());
+
+
+        if (requestPrimitive.getGroupRequestIdentifier() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_GID, requestPrimitive.getGroupRequestIdentifier());
+
+
+        if (requestPrimitive.getResponseType() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_RTU, requestPrimitive.getResponseType().toString());
+
+
+        if (requestPrimitive.getOriginatingTimestamp() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_OT, requestPrimitive.getOriginatingTimestamp());
+
+
+        if (requestPrimitive.getResultExpirationTimestamp() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_RST, requestPrimitive.getResultExpirationTimestamp());
+
+
+        if (requestPrimitive.getRequestExpirationTimestamp() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_RET, requestPrimitive.getRequestExpirationTimestamp());
+
+
+        if (requestPrimitive.getOperationExecutionTime() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_OET, requestPrimitive.getOperationExecutionTime());
+
+
+        if (requestPrimitive.getEventCategory() != null)
+            exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_EC, requestPrimitive.getEventCategory());
     }
 
 

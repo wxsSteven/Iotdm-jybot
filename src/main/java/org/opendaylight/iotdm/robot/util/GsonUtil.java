@@ -2,11 +2,7 @@ package org.opendaylight.iotdm.robot.util;
 
 import com.google.gson.*;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
-import org.opendaylight.iotdm.primitive.PrimitiveContent;
-import org.opendaylight.iotdm.robot.util.json.adaptor.PrimitiveContentAdaptor;
 
-import javax.json.Json;
-import java.math.BigInteger;
 import java.util.Map;
 
 /**
@@ -14,12 +10,12 @@ import java.util.Map;
  */
 public class GsonUtil {
     public static String toJson(Object o) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(PrimitiveContent.class, new PrimitiveContentAdaptor()).create();
+        Gson gson = new GsonBuilder().create();
         return gson.toJson(o);
     }
 
     public static String toPrettyJson(Object o) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(PrimitiveContent.class, new PrimitiveContentAdaptor()).create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(o);
     }
 
@@ -33,7 +29,7 @@ public class GsonUtil {
         }
     }
 
-    public static String jsonToShortJson(String str){
+    public static String jsonToShortJson(String str) {
         try {
             JsonParser parser = new JsonParser();
             JsonElement object = parser.parse(str);
@@ -48,11 +44,11 @@ public class GsonUtil {
         if (element.isJsonObject()) {
             JsonObject object = element.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-                String shortName=OneM2M.Name.ResourceAttribute.shortName(entry.getKey());
-                if(!shortName.equals(entry.getKey())){
-                    JsonElement e=entry.getValue();
+                String shortName = OneM2M.Name.ResourceAttribute.shortName(entry.getKey());
+                if (!shortName.equals(entry.getKey())) {
+                    JsonElement e = entry.getValue();
                     object.remove(entry.getKey());
-                    object.add(shortName,e);
+                    object.add(shortName, e);
                 }
                 jsonToShortJsonHelper(entry.getValue());
             }
