@@ -3,7 +3,6 @@ package org.opendaylight.iotdm.robot.util;
 import com.google.gson.*;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 
-import javax.json.Json;
 import java.util.Map;
 
 /**
