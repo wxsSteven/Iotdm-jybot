@@ -17,8 +17,10 @@ import java.net.URISyntaxException;
 public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
-        RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
-        requestPrimitive.setTo("http://localhost:8282/InCSE1/Bill");
+        RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
+        requestPrimitive.setName(null);
+        requestPrimitive.setResultContent(null);
+        requestPrimitive.setTo("http://localhost:8282/InCSE1");
         iotdm.sendRequestAndGetResponse(requestPrimitive);
     }
 }

@@ -56,7 +56,7 @@ oneM2M EXPRESSLY ADVISES ANY AND ALL USE OF OR RELIANCE UPON THIS INFORMATION PR
           <!-- parameter "Operation Execution Time" -->
           <xs:element name="operationExecutionTime" type="m2m:timestamp" minOccurs="0"/>
           <!-- parameter "Response Type" -->
-          <xs:element name="responseType" type="m2m:resourceType" minOccurs="0"/>
+          <xs:element name="responseType" type="m2m:responseTypeInfo" minOccurs="0"/>
           <!-- parameter "Result Persistence" -->
           <xs:element name="resultPersistence" type="xs:duration" minOccurs="0"/>
           <!-- parameter "Result Content" -->

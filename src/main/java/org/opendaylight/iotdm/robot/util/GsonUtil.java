@@ -29,6 +29,16 @@ public class GsonUtil {
         }
     }
 
+    public static Object fromJson(String str){
+        try {
+            JsonParser parser = new JsonParser();
+            JsonElement object = parser.parse(str);
+            return object;
+        } catch (Exception e) {
+            return str;
+        }
+    }
+
     public static String jsonToShortJson(String str) {
         try {
             JsonParser parser = new JsonParser();
@@ -62,4 +72,6 @@ public class GsonUtil {
             }
         }
     }
+
+
 }

@@ -20,13 +20,13 @@ public class OneM2M {
             this.operation = operation;
         }
 
-        private BigInteger getValue() {
+        public BigInteger value() {
             return operation;
         }
 
         public static Operation getEnum(BigInteger value) {
             for (Operation o : Operation.values()) {
-                if (o.getValue().equals(value)) {
+                if (o.value().equals(value)) {
                     return o;
                 }
             }

@@ -15,11 +15,10 @@ public class RequestPrimitiveFactory {
     public static RequestPrimitive makeDefaultRequestPrimitive() {
 //PrimitiveContent construction
         PrimitiveContent pc = new PrimitiveContent();
-        AE ae=new AE();
-        ae.setAEID("AE_ID");
-        ae.setAppName("iphone");
-        ae.setOntologyRef("http://hey/you");
-        pc.getAny().add(ae);
+        Container container=new Container();
+        container.setOntologyRef("icloud");
+        container.setCreator("iphone");
+        pc.getAny().add(container);
 //FilterCriteria Content construction
         FilterCriteria fc = new FilterCriteria();
         fc.setCreatedAfter("12345");
@@ -36,23 +35,23 @@ public class RequestPrimitiveFactory {
         fc.getAttribute().add(attribute);
 //ResponseType construction
         ResponseTypeInfo rti = new ResponseTypeInfo();
-        rti.getNotificationURI().add("localhost");
-        rti.getNotificationURI().add("localhost");
-        rti.setResponseType(BigInteger.ONE);
+        rti.getNotificationURI().add("localhost1");
+        rti.getNotificationURI().add("localhost2");
+        rti.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
 //RequestPrimitive Constuction
         RequestPrimitive request = new RequestPrimitive();
-        request.setOperation(BigInteger.ONE);
+        request.setOperation(OneM2M.Operation.CREATE.value());
         request.setTo("http://localhost:8282/InCSE1");
         request.setFrom("http://localhost:8989");
         request.setRequestIdentifier("1234");
-        request.setResourceType(OneM2M.ResourceType.AE.value());
-        request.setName("AE");
+        request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
+        request.setName("Bill");
         request.setContent(pc);
         request.setOriginatingTimestamp("100000");
         request.setRequestExpirationTimestamp("200000");
         request.setResultExpirationTimestamp("200000");
         request.setOperationExecutionTime("100000");
-        request.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
+        request.setResponseType(rti);
         try {
             request.setResultPersistence(DatatypeFactory.newInstance().newDuration(10000000));
         } catch (DatatypeConfigurationException e) {

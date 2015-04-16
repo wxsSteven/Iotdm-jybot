@@ -24,7 +24,7 @@ public class Prepare {
             ub=new URIBuilder();
         }
         if(!ub.getPath().startsWith("/"))
-            ub.setPath("/"+ub.getPath());
+            ub.setPath("/" + ub.getPath());
 
         if(ub.getHost()==null)
             ub.setHost(host);
@@ -34,11 +34,11 @@ public class Prepare {
 
         ub.setScheme(schema);
 
-        if(requestPrimitive.getResponseType()!=null)
-            ub.addParameter(OneM2M.Name.Primitive.RESOURCE_TYPE.toString(),requestPrimitive.getResponseType().toString());
+        if(requestPrimitive.getResponseType()!=null&&requestPrimitive.getResponseType().getResponseType()!=null)
+            ub.addParameter(OneM2M.Name.Primitive.RESPONSE_TYPE.toString(),requestPrimitive.getResponseType().getResponseType().toString());
 
         if (requestPrimitive.getResourceType() != null)
-            ub.addParameter(OneM2M.Name.Primitive.RESPONSE_TYPE.toString(),requestPrimitive.getResourceType().toString());
+            ub.addParameter(OneM2M.Name.Primitive.RESOURCE_TYPE.toString(),requestPrimitive.getResourceType().toString());
 
         if (requestPrimitive.getResultPersistence() != null)
             ub.addParameter(OneM2M.Name.Primitive.RESULT_PERSISTENCE.toString(),requestPrimitive.getResultPersistence().toString());
@@ -87,10 +87,11 @@ public class Prepare {
             if (fc.getSizeBelow() != null)
                 ub.addParameter(OneM2M.Name.Primitive.SIZE_BELOW.toString(),fc.getSizeBelow().toString());
 
-            if (fc.getContentType() != null)
-                ub.addParameter(OneM2M.Name.Primitive.CONTENT_TYPE.toString(),prepareListString(fc.getContentType()));
+            if (fc.getContentType() != null&&!fc.getContentType().isEmpty()){
+                  ub.addParameter(OneM2M.Name.Primitive.CONTENT_TYPE.toString(),prepareListString(fc.getContentType()));
+            }
 
-            if (fc.getAttribute() != null)
+            if (fc.getAttribute() != null&&!fc.getAttribute().isEmpty())
                 ub.addParameter(OneM2M.Name.Primitive.ATTRIBUTE.toString(),prepareListAttribute(fc.getAttribute()));
 
             if (fc.getFilterUsage() != null)
