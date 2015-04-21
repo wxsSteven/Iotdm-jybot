@@ -19,17 +19,28 @@ Create
 
 #---------------  Create And Retrieve  ------------
 
-    Change Attribute In     ${requestPrimitive}   Set Operation    2
     
 1.11 Valid Input for AE without name
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     Change Attribute In     ${requestPrimitive}   Set Name    createAE
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   responseStatusCode
-#   test the retrieve part
+
+#   test the retrieve part with hierURI
     ${hierURI} =     Get Hier URI   ${result}
     ${nonhierURI} =  Get Non Hier URI   ${result}
-    #delete the whole tree
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   AE
+
+#   test the retrieve part with nonhierURI
+
+#    Change Attribute In     ${requestPrimitive}   Set discoveryResultType    2
+
+#    delete the whole tree
 #    Change Attribute In     ${requestPrimitive}   Set Operation    4
 #    ${result} =  Send Request And GetResponse   ${requestPrimitive}
 #    Should Contain  ${result}   responseStatusCode
@@ -42,6 +53,19 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   AE
+
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   AE
+    Should Be Equal   ${hierURI}    InCSE1/validName
+#   test the retrieve part with nonhierURI
+#    Change Attribute In     ${requestPrimitive}   Set discoveryResultType    2
 
 
 1.13 Invalid Input for AE with name (Already Exist)
@@ -69,8 +93,41 @@ Create
 
 # -----------------   Update and Retrieve -------------
 
-1.21 Update AE
+1.21 Valid Update AE's labels
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateAE
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/validName
+	Change Content Attribute In  ${requestPrimitive} 	labels	updateAE
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   update
+    Should Contain  ${result}   AE
 
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   updateAE
+    Should Contain  ${result}   AE
+
+1.22 InValid Update AE's name
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateAE
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/validName
+	Change Content Attribute In  ${requestPrimitive} 	resourceName	updateAE
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Not Contain  ${result}    updateAE
+
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   validName
+    Should Contain  ${result}   AE
 
 #------------------------------------------------------
 
@@ -97,6 +154,16 @@ Create
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
 
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+
 2.12 Valid Input for container under AE with name and label
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     Change Attribute In     ${requestPrimitive}   Set Name    createContainerUnderAE
@@ -107,6 +174,17 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+    Should Be Equal   ${hierURI}    InCSE1/validName/containerUnderAE
 
 2.13 Invalid Input for container under AE with name (Already Exist)
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
@@ -127,13 +205,62 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   RpcError
 
-#--------------------------
+# -----------------   Update and Retrieve -------------
+
+
+2.15 Valid Update container's labels
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/validName/containerUnderAE
+	Change Content Attribute In  ${requestPrimitive} 	labels	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   update
+    Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   updateContainer
+    Should Contain  ${result}   container
+
+2.16 InValid Update container's name
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/validName/containerUnderAE
+	Change Content Attribute In  ${requestPrimitive} 	resourceName	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Not Contain  ${result}    updateContainer
+
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   containerUnderAE
+    Should Contain  ${result}   container
+
+#------------------  Create -----------------------
 
 2.21 Valid Input for container under CSEBase without name
 	${requestPrimitive} =    Get Initilazed Create Request Primitive
 	Change Attribute In     ${requestPrimitive}   Set Name    createContainerUnderCSEBase
     Change Attribute In     ${requestPrimitive}   Set ResourceType    3
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
 
@@ -147,6 +274,16 @@ Create
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
 
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+    Should Be Equal   ${hierURI}    InCSE1/containerUnderCSEBase
 
 2.23 Invalid Input for container under CSEBase with name(Already exist)
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
@@ -165,7 +302,47 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   RpcError
 
-#--------------------------------
+
+
+#------------  Update And Retrieve ---------------------
+
+2.25 Valid Update container's labels
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase
+	Change Content Attribute In  ${requestPrimitive} 	labels	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   update
+    Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   updateContainer
+    Should Contain  ${result}   container
+
+2.26 InValid Update container's name
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase
+	Change Content Attribute In  ${requestPrimitive} 	resourceName	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Not Contain  ${result}    updateContainer
+
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   containerUnderCSEBase
+    Should Contain  ${result}   container
+
+#------------------  Create -----------------------
 
 2.31 Valid Input for container under container without name
 	${requestPrimitive} =    Get Initilazed Create Request Primitive
@@ -173,6 +350,16 @@ Create
     Change Attribute In     ${requestPrimitive}   Set ResourceType    3
     Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
 
@@ -186,6 +373,17 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+    ${hierURI} =     Get Hier URI   ${result}
+    ${nonhierURI} =  Get Non Hier URI   ${result}
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/${hierURI}
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   container
+    Should Be Equal   ${hierURI}    InCSE1/containerUnderCSEBase/containerUnderContainer
 
 2.33 InValid Input for container under container with name (alredy exist)
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
@@ -205,6 +403,45 @@ Create
     Change Content Attribute In  ${requestPrimitive} 	resourceName	containerUnder/Container
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   RpcError
+
+
+#----------  Update And Retrieve -------------------
+
+2.35 Valid Update container's labels
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase/containerUnderContainer
+	Change Content Attribute In  ${requestPrimitive} 	labels	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   update
+    Should Contain  ${result}   container
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   updateContainer
+    Should Contain  ${result}   container
+
+2.36 InValid Update container's name
+    ${requestPrimitive} =    Get Initilazed Create Request Primitive
+    Change Attribute In     ${requestPrimitive}   Set Name    updateAE
+    Change Attribute In     ${requestPrimitive}   Set Operation    3
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase/containerUnderContainer
+	Change Content Attribute In  ${requestPrimitive} 	resourceName	updateContainer
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Not Contain  ${result}    updateContainer
+
+
+#   test the retrieve part with hierURI
+
+    Change Attribute In     ${requestPrimitive}   Set Operation    2
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+#   Update this method once "response" is following the document
+    Should Contain  ${result}   containerUnderContainer
+    Should Contain  ${result}   container
 
 #--------------------- test one deeper layer
 
@@ -240,12 +477,22 @@ Create
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   contentInstance
 
-3.12 Valid contentInstance under CSEBase/container with content
+    # Create more contentInstance for next test
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   contentInstance
+
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   responseStatusCode
+    Should Contain  ${result}   contentInstance
+
+3.12 Valid contentInstance under CSEBase/container with content and name
 	${requestPrimitive} =    Get Initilazed Create Request Primitive
 	Change Attribute In     ${requestPrimitive}   Set Name    createContentInstanceUnderContainerOfBase
     Change Attribute In     ${requestPrimitive}   Set ResourceType    4
     Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase
     Change Content Attribute In  ${requestPrimitive} 	content	        SomeContent
+    Change Content Attribute In  ${requestPrimitive} 	resourceName    contentInstance1
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   responseStatusCode
     Should Contain  ${result}   contentInstance
@@ -303,10 +550,58 @@ Create
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
     Should Contain  ${result}   RpcError
 
-#==============================================
+#==================================================
 
-#Delete the whole tree
-    #delete the whole tree
+
+
+#==================================================
+#       Delete Test
+#==================================================
+
+#----- Delte contentInstance and Retrieve  --------
+4.11 Delete the contentInstance named contentInstance1
+	${requestPrimitive} =    Get Initilazed Create Request Primitive
+	Change Attribute In     ${requestPrimitive}   Set Name    deleteContentInstance
+    Change Attribute In     ${requestPrimitive}   Set Operation    4
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase/contentInstance1
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   delete
+    Should Contain  ${result}   contentInstance
+
+# use retrieve parent to check this contentInstance is deleted
+
+
+# Delte again should return error
+
+
+#--------- Delte container  -----------------------
+
+4.12 Delete the container named containerUnderCSEBase
+	${requestPrimitive} =    Get Initilazed Create Request Primitive
+	Change Attribute In     ${requestPrimitive}   Set Name    deleteContainer
+    Change Attribute In     ${requestPrimitive}   Set Operation    4
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/containerUnderCSEBase
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   delete
+    Should Contain  ${result}   container
+
+
+#--------- Delte AE  ------------------------------
+
+4.13 Delete the AE named validName
+	${requestPrimitive} =    Get Initilazed Create Request Primitive
+	Change Attribute In     ${requestPrimitive}   Set Name    deleteAE
+    Change Attribute In     ${requestPrimitive}   Set Operation    4
+    Change Attribute In     ${requestPrimitive}   Set To    http://localhost:8282/InCSE1/validName
+    ${result} =  Send Request And GetResponse   ${requestPrimitive}
+    Should Contain  ${result}   delete
+    Should Contain  ${result}   AE
+
+
+
+
+#   Delete the whole tree
+
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     Change Attribute In     ${requestPrimitive}   Set Operation    4
     ${result} =  Send Request And GetResponse   ${requestPrimitive}
