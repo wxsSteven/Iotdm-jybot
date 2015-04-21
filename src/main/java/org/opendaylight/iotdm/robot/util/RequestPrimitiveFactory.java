@@ -40,13 +40,9 @@ public class RequestPrimitiveFactory {
         rti.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
 //RequestPrimitive Constuction
         RequestPrimitive request = new RequestPrimitive();
-<<<<<<< HEAD
-        request.setOperation(BigInteger.ONE);
-        request.setTo("/InCSE1");
-=======
+
         request.setOperation(OneM2M.Operation.CREATE.value());
         request.setTo("http://localhost:8282/InCSE1");
->>>>>>> coap
         request.setFrom("http://localhost:8989");
         request.setRequestIdentifier("1234");
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());

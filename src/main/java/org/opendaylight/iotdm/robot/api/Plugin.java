@@ -9,9 +9,6 @@ import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 public interface Plugin {
     void start();
     void close();
-<<<<<<< HEAD
-    String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port);
-=======
+
     ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port,String timeout);
->>>>>>> coap
 }

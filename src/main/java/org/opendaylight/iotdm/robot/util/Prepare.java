@@ -6,14 +6,9 @@ import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.FilterCriteria;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 
-<<<<<<< HEAD
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.HashMap;
-=======
+
 import java.net.URI;
 import java.net.URISyntaxException;
->>>>>>> coap
 import java.util.List;
 
 /**
@@ -23,22 +18,7 @@ public class Prepare {
 
     public static URI uri(RequestPrimitive requestPrimitive,String host,String port,String schema) {
 
-<<<<<<< HEAD
-        StringBuilder sb = new StringBuilder();
-        String path="";
-        try{
-           path=new URI(requestPrimitive.getTo()).getPath();
-            if(!path.startsWith("/"))
-                path="/"+path;
-        }catch(Exception e){
-            System.out.println("Not valid uri");
-        }
 
-        sb.append(path);
-        sb.append("?");
-        if (requestPrimitive.getFrom() != null)
-            sb.append(OneM2MName.FROM + "=" + requestPrimitive.getFrom() + "&");
-=======
         URIBuilder ub= null;
         try {
             ub = new URIBuilder(requestPrimitive.getTo());
@@ -48,7 +28,6 @@ public class Prepare {
         }
         if(!ub.getPath().startsWith("/"))
             ub.setPath("/" + ub.getPath());
->>>>>>> coap
 
         if(ub.getHost()==null)
             ub.setHost(host);
@@ -93,22 +72,18 @@ public class Prepare {
             if (fc.getStateTagBigger() != null)
                 ub.addParameter(OneM2M.Name.Primitive.STATE_TAG_BIGGER.toString(),fc.getStateTagBigger().toString());
 
-<<<<<<< HEAD
-        String result = sb.toString();
-        if (result.endsWith("?"))
-            result = result.substring(0, result.length());
-        return result;
-    }
-=======
+
             if (fc.getExpireBefore() != null)
                 ub.addParameter(OneM2M.Name.Primitive.EXPIRE_BEFORE.toString(),fc.getExpireBefore());
 
             if (fc.getExpireAfter() != null)
                 ub.addParameter(OneM2M.Name.Primitive.EXPIRE_AFTER.toString(),fc.getExpireAfter());
->>>>>>> coap
 
-            if (fc.getLabels() != null)
-                ub.addParameter(OneM2M.Name.Primitive.LABELS.toString(),prepareListString(fc.getLabels()));
+            if (fc.getLabels() != null&&!fc.getLabels().isEmpty()){
+                for (String str : fc.getLabels()) {
+                    ub.addParameter(OneM2M.Name.Primitive.LABELS.toString(),str);
+                }
+            }
 
             if (fc.getResourceType() != null)
                 ub.addParameter(OneM2M.Name.Primitive.FILTER_CRITERIA_RESOURCE_TYPE.toString(),fc.getResourceType().toString());
@@ -120,7 +95,9 @@ public class Prepare {
                 ub.addParameter(OneM2M.Name.Primitive.SIZE_BELOW.toString(),fc.getSizeBelow().toString());
 
             if (fc.getContentType() != null&&!fc.getContentType().isEmpty()){
-                  ub.addParameter(OneM2M.Name.Primitive.CONTENT_TYPE.toString(),prepareListString(fc.getContentType()));
+                for (String str : fc.getContentType()) {
+                    ub.addParameter(OneM2M.Name.Primitive.CONTENT_TYPE.toString(),str);
+                }
             }
 
             if (fc.getAttribute() != null&&!fc.getAttribute().isEmpty())
@@ -155,18 +132,6 @@ public class Prepare {
         }
         return sb.substring("+".length());
     }
-
-    private static String prepareListString(List<String> list) {
-        if (list.isEmpty())
-            return list.toString();
-
-        StringBuilder sb = new StringBuilder();
-        for (String str : list) {
-            sb.append("+" + str);
-        }
-        return sb.substring("+".length());
-    }
-
 
     public static String payload(RequestPrimitive requestPrimitive) {
         if (requestPrimitive == null)

@@ -1,6 +1,6 @@
 package org.opendaylight.iotdm.robot.iotdm;
 
-import org.opendaylight.iotdm.constant.enumeration.Operation;
+import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
@@ -10,14 +10,11 @@ import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 
-import java.lang.System;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-
 
 
 /**
@@ -26,13 +23,9 @@ import java.util.List;
 public class Iotdm {
     private String host = "localhost";
     private String port = "8282";
-<<<<<<< HEAD
-    private String schema = "http";
 
-=======
     private String timeout = "5000";
     private String schema = "http";
->>>>>>> coap
 
     /**
      * {
@@ -86,14 +79,7 @@ public class Iotdm {
      * @return
      */
 
-<<<<<<< HEAD
-    public void setAccessServer(String host, String port, String schema) {
-        this.host = host;
-        this.port = port;
-        this.schema = schema;
-    }
 
-=======
     public void setAccessPoint(String host, String port, String timeout) {
         this.host = host;
         this.port = port;
@@ -111,7 +97,6 @@ public class Iotdm {
     public void setPort(String port) {
         this.port = port;
     }
->>>>>>> coap
 
     public RequestPrimitive getInitilazedRequestPrimitive() {
         return RequestPrimitiveFactory.makeDefaultRequestPrimitive();
@@ -123,7 +108,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedCreateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        rp.setOperation(Operation.CREATE.getValue());
+        rp.setOperation(OneM2M.Operation.CREATE.value());
         rp.setFilterCriteria(null);
         rp.setDiscoveryResultType(null);
         return rp;
@@ -131,7 +116,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedRetrieveRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        rp.setOperation(Operation.RETRIEVE.getValue());
+        rp.setOperation(OneM2M.Operation.RETRIEVE.value());
         rp.setResourceType(null);
         rp.setName(null);
         return rp;
@@ -139,7 +124,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedUpdateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        rp.setOperation(Operation.UPDATE.getValue());
+        rp.setOperation(OneM2M.Operation.UPDATE.value());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setDiscoveryResultType(null);
@@ -148,7 +133,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedDeleteRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        rp.setOperation(Operation.DELETE.getValue());
+        rp.setOperation(OneM2M.Operation.DELETE.value());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setContent(null);
@@ -158,7 +143,7 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedNotifyRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        rp.setOperation(Operation.NOTIFY.getValue());
+        rp.setOperation(OneM2M.Operation.NOTIFY.value());
         rp.setResourceType(null);
         rp.setName(null);
         rp.setResultPersistence(null);
@@ -241,18 +226,12 @@ public class Iotdm {
         list.add(attr);
     }
 
-<<<<<<< HEAD
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
-        Http http = new Http();
-        http.start();
-        System.out.println("Request:");
-        String rst = GsonUtil.jsonToPrettyJson(http.sendRequestAndGetResponse(requestPrimitive, host, port));
-=======
+
     public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
         Plugin plugin = PluginCenter.getPlugin(schema);
         try {
             URI uri = new URI(requestPrimitive.getTo());
-            if(uri.getScheme()!=null)
+            if (uri.getScheme() != null)
                 plugin = PluginCenter.getPlugin(uri.getScheme());
         } catch (Exception e) {
             System.out.println();
@@ -260,9 +239,8 @@ public class Iotdm {
 
         plugin.start();
         System.out.println("Request:");
-        ResponsePrimitive responsePrimitive=plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
+        ResponsePrimitive responsePrimitive = plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
         String rst = GsonUtil.toPrettyJson(responsePrimitive);
->>>>>>> coap
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);
@@ -270,34 +248,34 @@ public class Iotdm {
         return responsePrimitive;
     }
 
-    public String toJson(Object o){
+    public String toJson(Object o) {
         return GsonUtil.toPrettyJson(o);
     }
 
-    public String getHierURI (String output){
-        try{
+    public String getHierURI(String output) {
+        try {
             String[] inputlist = output.split("path:");
             // String[1] = InCSE1/10057,Non-hierarchical
 
             String[] hierlist = inputlist[1].split(",");
             System.out.println(hierlist[0]);
             return hierlist[0];
-        }catch(Exception pe){
+        } catch (Exception pe) {
             System.out.println("Cannot find path in:" + output);
             System.out.println(pe);
             return null;
         }
     }
 
-    public String getNonHierURI (String output){
-        try{
+    public String getNonHierURI(String output) {
+        try {
             String[] inputlist = output.split("path:");
             // String[2] = InCSE1/1609248733" ...
 
             String[] hierlist = inputlist[2].split("\"");
             System.out.println(hierlist[0]);
             return hierlist[0];
-        }catch(Exception pe){
+        } catch (Exception pe) {
             System.out.println("Cannot find path in:" + output);
             System.out.println(pe);
             return null;

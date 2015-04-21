@@ -2,14 +2,6 @@ package org.opendaylight.iotdm.robot.example;
 
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
-<<<<<<< HEAD
-import org.opendaylight.iotdm.robot.util.GsonUtil;
-import org.opendaylight.iotdm.robot.util.Prepare;
-=======
->>>>>>> coap
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Created by wenxshi on 3/4/15.
@@ -22,20 +14,10 @@ import java.net.URISyntaxException;
 public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
-<<<<<<< HEAD
-        RequestPrimitive requestPrimitive = iotdm.getInitilazedRequestPrimitive();
 
-        requestPrimitive.setTo("InCSE1/Base");
-        String url="http"+"://"+"localhost"+":"+"8282"+Prepare.uri(requestPrimitive);
-        System.out.println(url);
-        url = Prepare.uriAdapter(url);
-        System.out.println(url);
-
-=======
         RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
         requestPrimitive.setTo(null);
         iotdm.sendRequestAndGetResponse(requestPrimitive);
->>>>>>> coap
     }
 }
 

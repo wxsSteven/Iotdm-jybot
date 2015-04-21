@@ -23,12 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-<<<<<<< HEAD
-import java.net.URI;
-import java.net.URISyntaxException;
-=======
+
 import java.math.BigInteger;
->>>>>>> coap
 
 /**
  * Created by wenxshi on 3/30/15.
@@ -73,17 +69,11 @@ public class Http implements Plugin {
         }
     }
 
-<<<<<<< HEAD
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port) {
 
-        String url = Prepare.uriAdapter(SCHEME+"://"+host+":"+port+Prepare.uri(requestPrimitive));
-        String payload =Prepare.payloadAdapter(Prepare.payload(requestPrimitive));
-=======
     public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive, String host, String port, String timeout) {
         ContentExchange exchange = new ContentExchange(true);
         String url = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
         String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
->>>>>>> coap
 
         exchange.setURL(url);
         exchange.setRequestContentType(CONTENT_TYPE);
