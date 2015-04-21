@@ -57,6 +57,9 @@ public class GsonUtil {
             JsonObject object1=element1.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
                 String shortName = OneM2M.Name.ResourceAttribute.shortName(entry.getKey());
+                if(shortName.equals(entry.getKey())){
+                    shortName=OneM2M.Name.ComplexType.shortName(entry.getKey());
+                }
                 if (!shortName.equals(entry.getKey())) {
                     JsonElement e = entry.getValue();
                     object1.remove(entry.getKey());

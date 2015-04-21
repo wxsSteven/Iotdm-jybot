@@ -1057,6 +1057,14 @@ public class OneM2M {
                 this.fullName = fullName;
             }
 
+            public static String shortName(String name) {
+                for (OneM2M.Name.ComplexType attr : OneM2M.Name.ComplexType.values()) {
+                    if (attr.fullName.equals(name))
+                        return attr.shortName;
+                }
+                return name;
+            }
+
             public String toString() {
                 return shortName;
             }
