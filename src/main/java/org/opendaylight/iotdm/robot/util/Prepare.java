@@ -20,8 +20,9 @@ public class Prepare {
         URIBuilder ub= null;
         try {
             ub = new URIBuilder(requestPrimitive.getTo());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             ub=new URIBuilder();
+            ub.setPath("");
         }
         if(!ub.getPath().startsWith("/"))
             ub.setPath("/" + ub.getPath());

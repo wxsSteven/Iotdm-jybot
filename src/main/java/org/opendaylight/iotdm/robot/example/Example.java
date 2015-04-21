@@ -18,9 +18,7 @@ public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
         RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
-        requestPrimitive.setName(null);
-        requestPrimitive.setResultContent(null);
-        requestPrimitive.setTo("http://localhost:8282/InCSE1");
+        requestPrimitive.setTo(null);
         iotdm.sendRequestAndGetResponse(requestPrimitive);
     }
 }

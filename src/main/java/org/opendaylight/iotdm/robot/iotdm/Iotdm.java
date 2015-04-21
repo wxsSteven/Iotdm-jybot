@@ -3,6 +3,7 @@ package org.opendaylight.iotdm.robot.iotdm;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
@@ -216,23 +217,28 @@ public class Iotdm {
         list.add(attr);
     }
 
-    public String sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
+    public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
         Plugin plugin = PluginCenter.getPlugin(schema);
         try {
             URI uri = new URI(requestPrimitive.getTo());
             if(uri.getScheme()!=null)
                 plugin = PluginCenter.getPlugin(uri.getScheme());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             System.out.println();
         }
 
         plugin.start();
         System.out.println("Request:");
-        String rst = GsonUtil.toPrettyJson(plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout));
+        ResponsePrimitive responsePrimitive=plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
+        String rst = GsonUtil.toPrettyJson(responsePrimitive);
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);
         plugin.close();
-        return rst;
+        return responsePrimitive;
+    }
+
+    public String toJson(Object o){
+        return GsonUtil.toPrettyJson(o);
     }
 }

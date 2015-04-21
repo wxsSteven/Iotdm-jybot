@@ -1,5 +1,8 @@
 package org.opendaylight.iotdm.constant.onem2m;
 
+import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.ResponsePrimitive;
+
 import java.math.BigInteger;
 
 /**
@@ -598,6 +601,10 @@ public class OneM2M {
             }
             return null;
         }
+
+        public BigInteger value(){
+            return value;
+        }
     }
 
     public enum AccessControlOperations {
@@ -1190,6 +1197,41 @@ public class OneM2M {
             public static final String X_M2M_OET = "X-M2M-OET";
             public static final String X_M2M_EC = "X-M2M-EC";
             public static final String X_M2M_RSC = "X-M2M-RSC";
+        }
+    }
+
+    public static class Assert {
+        public final static String NULL_EXCEPTION_ERROR_MESSAGE = "Null Exception";
+        public final static String INEQUAL_REQUEST_IDENTIFIER="Inequal Request Identifier";
+        public final static String INEQUAL_RESPONSE_STATUS_CODE="Inequal Response Status Code";
+
+        public static void assertNull(Object object) {
+            if (object == null)
+                throw new AssertionError(NULL_EXCEPTION_ERROR_MESSAGE);
+        }
+
+        public static void asserNull(String name, Object object) {
+            if (object == null)
+                throw new AssertionError(name + " cause " + NULL_EXCEPTION_ERROR_MESSAGE);
+        }
+
+        public static void assertNull(Object... objects) {
+            for (Object o : objects) {
+                assertNull(o);
+            }
+        }
+
+        public static void assertEqualRequestIdentifer(RequestPrimitive requestPrimitive, ResponsePrimitive responsePrimitive) {
+            asserNull("requestIdentifer of requestPrimitive",requestPrimitive.getRequestIdentifier());
+            asserNull("responseIdentifer of responsePrimitive",responsePrimitive.getRequestIdentifier());
+            if(!requestPrimitive.getRequestIdentifier().equals(responsePrimitive.getRequestIdentifier()))
+                throw new AssertionError(INEQUAL_REQUEST_IDENTIFIER);
+        }
+
+        public static void assertEqualResponseCode(BigInteger a, ResponsePrimitive rp) {
+               asserNull("Response Status Code",rp.getResponseStatusCode());
+            if(!a.equals(rp.getResponseStatusCode()))
+                throw new AssertionError(INEQUAL_RESPONSE_STATUS_CODE);
         }
     }
 }
