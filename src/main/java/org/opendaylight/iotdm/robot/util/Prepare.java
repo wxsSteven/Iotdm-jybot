@@ -1,37 +1,29 @@
 package org.opendaylight.iotdm.robot.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.opendaylight.iotdm.onem2m.core.constant.OneM2MName;
+import org.apache.http.client.utils.URIBuilder;
+import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.Attribute;
 import org.opendaylight.iotdm.primitive.FilterCriteria;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.constant.enumeration.*;
 
+<<<<<<< HEAD
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.HashMap;
+=======
+import java.net.URI;
+import java.net.URISyntaxException;
+>>>>>>> coap
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wenxshi on 3/30/15.
  */
 public class Prepare {
-    private static Map<String, EnumApi[]> map;
 
-    static {
-        map = new HashMap<String, EnumApi[]>();
-        map.put(OneM2MName.RESOURCE_TYPE, ResourceType.values());
-        map.put(OneM2MName.NOTIFICATION_CONTENT_TYPE, NotificationContentType.values());
-        map.put(OneM2MName.RESPONSE_TYPE, ResponseType.values());
-        map.put(OneM2MName.DISCOVERY_RESULT_TYPE, DiscResType.values());
-    }
+    public static URI uri(RequestPrimitive requestPrimitive,String host,String port,String schema) {
 
-    public static String uri(RequestPrimitive requestPrimitive) {
-
+<<<<<<< HEAD
         StringBuilder sb = new StringBuilder();
         String path="";
         try{
@@ -46,209 +38,141 @@ public class Prepare {
         sb.append("?");
         if (requestPrimitive.getFrom() != null)
             sb.append(OneM2MName.FROM + "=" + requestPrimitive.getFrom() + "&");
+=======
+        URIBuilder ub= null;
+        try {
+            ub = new URIBuilder(requestPrimitive.getTo());
+        } catch (Exception e) {
+            ub=new URIBuilder();
+            ub.setPath("");
+        }
+        if(!ub.getPath().startsWith("/"))
+            ub.setPath("/" + ub.getPath());
+>>>>>>> coap
 
-        if (requestPrimitive.getRequestIdentifier() != null)
-            sb.append(OneM2MName.REQUEST_IDENTIFIER + "=" + requestPrimitive.getRequestIdentifier() + "&");
+        if(ub.getHost()==null)
+            ub.setHost(host);
+
+        if(ub.getPort()<0)
+           ub.setPort(Integer.valueOf(port));
+
+        ub.setScheme(schema);
+
+        if(requestPrimitive.getResponseType()!=null&&requestPrimitive.getResponseType().getResponseType()!=null)
+            ub.addParameter(OneM2M.Name.Primitive.RESPONSE_TYPE.toString(),requestPrimitive.getResponseType().getResponseType().toString());
 
         if (requestPrimitive.getResourceType() != null)
-            sb.append(OneM2MName.RESOURCE_TYPE + "=" + requestPrimitive.getResourceType() + "&");
-
-        if (requestPrimitive.getName() != null)
-            sb.append(OneM2MName.NAME + "=" + requestPrimitive.getName() + "&");
-
-        if (requestPrimitive.getOriginatingTimestamp() != null)
-            sb.append(OneM2MName.ORIGINATING_TIMESTAMP + "=" + requestPrimitive.getOriginatingTimestamp() + "&");
-
-        if (requestPrimitive.getRequestExpirationTimestamp() != null)
-            sb.append(OneM2MName.REQUEST_EXPIRATION_TIMESTAMP + "=" + requestPrimitive.getRequestExpirationTimestamp() + "&");
-
-        if (requestPrimitive.getResultExpirationTimestamp() != null)
-            sb.append(OneM2MName.RESULT_EXPIRATION_TIMESTAMP + "=" + requestPrimitive.getRequestExpirationTimestamp() + "&");
-
-        if (requestPrimitive.getOperationExecutionTime() != null)
-            sb.append(OneM2MName.OPERATION_EXECUTION_TIME + "=" + requestPrimitive.getOperationExecutionTime() + "&");
-
-        if (requestPrimitive.getResponseType() != null)
-            sb.append(OneM2MName.RESOURCE_TYPE + "=" + requestPrimitive.getResponseType() + "&");
+            ub.addParameter(OneM2M.Name.Primitive.RESOURCE_TYPE.toString(),requestPrimitive.getResourceType().toString());
 
         if (requestPrimitive.getResultPersistence() != null)
-            sb.append(OneM2MName.RESULT_PERSISTENCE + "=" + requestPrimitive.getResultPersistence() + "&");
+            ub.addParameter(OneM2M.Name.Primitive.RESULT_PERSISTENCE.toString(),requestPrimitive.getResultPersistence().toString());
+
+        if (requestPrimitive.getDiscoveryResultType() != null)
+            ub.addParameter(OneM2M.Name.Primitive.DELIVERY_AGGREGATION.toString(),requestPrimitive.getDiscoveryResultType().toString());
 
         if (requestPrimitive.getResultContent() != null)
-            sb.append(OneM2MName.RESULT_CONTENT + "=" + requestPrimitive.getResultContent() + "&");
+            ub.addParameter(OneM2M.Name.Primitive.RESULT_CONTENT.toString(),requestPrimitive.getResultContent().toString());
 
-        if (requestPrimitive.getEventCategory() != null)
-            sb.append(OneM2MName.EVENT_CATEGORY + "=" + requestPrimitive.getEventCategory() + "&");
+        if (requestPrimitive.getFilterCriteria() != null) {
+            FilterCriteria fc = requestPrimitive.getFilterCriteria();
+            if (fc.getCreatedBefore() != null)
+                ub.addParameter(OneM2M.Name.Primitive.CREATED_BEFORE.toString(),fc.getCreatedBefore());
 
-        if (requestPrimitive.getDiscoveryResultType() != null)
-            sb.append(OneM2MName.DISCOVERY_RESULT_TYPE + "=" + requestPrimitive.getDiscoveryResultType() + "&");
+            if (fc.getCreatedAfter() != null)
+                ub.addParameter(OneM2M.Name.Primitive.CREATED_AFTER.toString(),fc.getCreatedAfter());
 
-        if (requestPrimitive.getFilterCriteria() != null)
-            appendFilterCriteria(sb, requestPrimitive.getFilterCriteria());
+            if (fc.getModifiedSince() != null)
+                ub.addParameter(OneM2M.Name.Primitive.MODIFIED_SINCE.toString(),fc.getModifiedSince());
 
-        if (requestPrimitive.getDiscoveryResultType() != null)
-            sb.append(OneM2MName.DISCOVERY_RESULT_TYPE + "=" + requestPrimitive.getDiscoveryResultType());
+            if (fc.getUnmodifiedSince() != null)
+                ub.addParameter(OneM2M.Name.Primitive.UNMODIFIED_SINCE.toString(),fc.getUnmodifiedSince());
 
+            if (fc.getStateTagSmaller() != null)
+                ub.addParameter(OneM2M.Name.Primitive.STATE_TAG_SMALLER.toString(),fc.getStateTagSmaller().toString());
+
+            if (fc.getStateTagBigger() != null)
+                ub.addParameter(OneM2M.Name.Primitive.STATE_TAG_BIGGER.toString(),fc.getStateTagBigger().toString());
+
+<<<<<<< HEAD
         String result = sb.toString();
         if (result.endsWith("?"))
             result = result.substring(0, result.length());
         return result;
     }
+=======
+            if (fc.getExpireBefore() != null)
+                ub.addParameter(OneM2M.Name.Primitive.EXPIRE_BEFORE.toString(),fc.getExpireBefore());
 
-    private static void appendFilterCriteria(StringBuilder sb, FilterCriteria fc) {
-        if (fc.getCreatedBefore() != null)
-            sb.append(OneM2MName.CREATED_BEFORE + "=" + fc.getCreatedBefore() + "&");
+            if (fc.getExpireAfter() != null)
+                ub.addParameter(OneM2M.Name.Primitive.EXPIRE_AFTER.toString(),fc.getExpireAfter());
+>>>>>>> coap
 
-        if (fc.getCreatedAfter() != null)
-            sb.append(OneM2MName.CREATED_AFTER + "=" + fc.getCreatedAfter() + "&");
+            if (fc.getLabels() != null)
+                ub.addParameter(OneM2M.Name.Primitive.LABELS.toString(),prepareListString(fc.getLabels()));
 
-        if (fc.getModifiedSince() != null)
-            sb.append(OneM2MName.MODIFIED_SINCE + "=" + fc.getModifiedSince() + "&");
+            if (fc.getResourceType() != null)
+                ub.addParameter(OneM2M.Name.Primitive.FILTER_CRITERIA_RESOURCE_TYPE.toString(),fc.getResourceType().toString());
 
-        if (fc.getUnmodifiedSince() != null)
-            sb.append(OneM2MName.UNMODIFIED_SINCE + "=" + fc.getUnmodifiedSince() + "&");
+            if (fc.getSizeAbove() != null)
+                ub.addParameter(OneM2M.Name.Primitive.SIZE_ABOVE.toString(), fc.getSizeAbove().toString());
 
-        if (fc.getStateTagSmaller() != null)
-            sb.append(OneM2MName.STATE_TAG_SMALLER + "=" + fc.getStateTagSmaller() + "&");
+            if (fc.getSizeBelow() != null)
+                ub.addParameter(OneM2M.Name.Primitive.SIZE_BELOW.toString(),fc.getSizeBelow().toString());
 
-        if (fc.getStateTagBigger() != null)
-            sb.append(OneM2MName.STATE_TAG_BIGGER + "=" + fc.getStateTagBigger() + "&");
-
-
-        if (fc.getExpireBefore() != null)
-            sb.append(OneM2MName.EXPIRE_BEFORE + "=" + fc.getExpireBefore() + "&");
-
-        if (fc.getExpireAfter() != null)
-            sb.append(OneM2MName.EXPIRE_AFTER + "=" + fc.getExpireAfter() + "&");
-
-        if (fc.getResourceType() != null)
-            sb.append(OneM2MName.RESOURCE_TYPE + "=" + fc.getResourceType() + "&");
-
-        if (fc.getSizeAbove() != null)
-            sb.append(OneM2MName.SIZE_ABOVE + "=" + fc.getSizeAbove() + "&");
-
-        if (fc.getSizeBelow() != null)
-            sb.append(OneM2MName.SIZE_BELOW + "=" + fc.getSizeBelow() + "&");
-
-        if (fc.getLimit() != null)
-            sb.append(OneM2MName.LIMIT + "=" + fc.getLimit());
-
-        //TODO:In future, using "+" to combine the collection
-        //----------------------------------------------------------------------------------------------------
-//        if (fc.getLabels() != null && fc.getLabels().size() > 0) {
-//            String labels = "";
-//            for (String l : fc.getLabels()) {
-//                labels += l + "+";
-//            }
-//            sb.append(OneM2MName.LABELS + "=" + labels.substring(0, labels.length()-1) + "&");
-//        }
-//
-//        if (fc.getContentType() != null && fc.getContentType().size() > 0) {
-//            String ct = "";
-//            for (String c : fc.getContentType()) {
-//                ct += c + "+";
-//            }
-//            sb.append(OneM2MName.CREATED_BEFORE + "=" + ct.substring(0, ct.length()-1) + "&");
-//        }
-//
-//        if (fc.getAttribute() != null && fc.getAttribute().size() > 0) {
-//            String attributes = "";
-//            for (Attribute attr : fc.getAttribute()) {
-//                if (attr.getName() != null && attr.getValue() != null)
-//                    attributes += attr.getName() + ":" + attr.getValue() + "+";
-//            }
-//            sb.append(OneM2MName.ATTRIBUTE + "=" + attributes.substring(0, attributes.length()-1) + "&");
-//        }
-        //--------------------------------------------------------------------------------------------------
-
-        //Todo:following will be deprecated
-        //----------------------------------------------------------------------------------------------------
-        if (fc.getLabels() != null && fc.getLabels().size() > 0) {
-            for (String l : fc.getLabels()) {
-                sb.append(OneM2MName.LABELS + "=" + l + "&");
+            if (fc.getContentType() != null&&!fc.getContentType().isEmpty()){
+                  ub.addParameter(OneM2M.Name.Primitive.CONTENT_TYPE.toString(),prepareListString(fc.getContentType()));
             }
+
+            if (fc.getAttribute() != null&&!fc.getAttribute().isEmpty())
+                ub.addParameter(OneM2M.Name.Primitive.ATTRIBUTE.toString(),prepareListAttribute(fc.getAttribute()));
+
+            if (fc.getFilterUsage() != null)
+                ub.addParameter(OneM2M.Name.Primitive.FILTER_USAGE.toString(),fc.getFilterUsage().toString());
+
+            if (fc.getLimit() != null)
+                ub.addParameter(OneM2M.Name.Primitive.LIMIT.toString(),fc.getLimit().toString());
         }
+        if (requestPrimitive.getDiscoveryResultType() != null)
+            ub.addParameter(OneM2M.Name.Primitive.DISCOVERY_RESULT_TYPE.toString(), requestPrimitive.getDiscoveryResultType().toString());
 
-        if (fc.getContentType() != null && fc.getContentType().size() > 0) {
-            for (String c : fc.getContentType()) {
-                sb.append(OneM2MName.CREATED_BEFORE + "=" + c + "&");
-            }
+        try {
+            return ub.build();
+        } catch (URISyntaxException e) {
+            return null;
         }
+    }
 
-        if (fc.getAttribute() != null && fc.getAttribute().size() > 0) {
-            for (Attribute attr : fc.getAttribute()) {
-                if (attr.getName() != null && attr.getValue() != null)
-                    sb.append(OneM2MName.ATTRIBUTE + "=" + attr.getName() + ":" + attr.getValue() + "&");
-            }
+    private static String prepareListAttribute(List<Attribute> list) {
+        if (list.isEmpty())
+            return list.toString();
+
+        StringBuilder sb = new StringBuilder();
+        for (Attribute attr : list) {
+            sb.append("+");
+            sb.append(attr.getName());
+            sb.append(":");
+            sb.append(attr.getValue());
         }
-        //-----------------------------------------------------------------------------------------------------
+        return sb.substring("+".length());
+    }
 
+    private static String prepareListString(List<String> list) {
+        if (list.isEmpty())
+            return list.toString();
 
-        if (fc.getFilterUsage() != null)
-            sb.append(OneM2MName.FILTER_USAGE + "=" + fc.getFilterUsage() + "&");
-
+        StringBuilder sb = new StringBuilder();
+        for (String str : list) {
+            sb.append("+" + str);
+        }
+        return sb.substring("+".length());
     }
 
 
     public static String payload(RequestPrimitive requestPrimitive) {
-        if (requestPrimitive != null) {
-            return GsonUtil.toJson(requestPrimitive);
-        }
-        return null;
+        if (requestPrimitive == null)
+            return null;
+        String str = GsonUtil.toPrettyJson(requestPrimitive.getContent());
+        return GsonUtil.jsonToShortJson(str);
     }
 
-    public static String payloadAdapter(String str) {
-        JsonParser parser = new JsonParser();
-        JsonElement root = parser.parse(str).getAsJsonObject();
-        changeElementByKey(root);
-        return GsonUtil.toPrettyJson(root);
-    }
-
-    private static void changeElementByKey(JsonElement element) {
-        for (String key : map.keySet()) {
-            changeElementByKeyHelper(element, key);
-        }
-    }
-
-    private static void changeElementByKeyHelper(JsonElement element, String key) {
-        if (element.isJsonObject()) {
-            JsonObject object = element.getAsJsonObject();
-            if (object.has(key)) {
-                BigInteger number = object.get(key).getAsBigInteger();
-                object.remove(key);
-                object.addProperty(key, searchName(key, number));
-            }
-            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-                changeElementByKeyHelper(entry.getValue(), key);
-            }
-        } else if (element.isJsonArray()) {
-            JsonArray array = element.getAsJsonArray();
-            for (int i = 0; i < array.size(); i++) {
-                changeElementByKeyHelper(array.get(i), key);
-            }
-        }
-    }
-
-
-    private static String searchName(String key, BigInteger number) {
-        for (EnumApi api : map.get(key)) {
-            if (number.equals(api.getValue()))
-                return api.getInterpretation();
-        }
-        return "";
-    }
-
-    public static String uriAdapter(String uriStr) {
-        Uri ub = new Uri(uriStr);
-        for (String name : map.keySet()) {
-            List<String> values=ub.getQueryValue(name);
-            if(values==null)
-                continue;
-            ub.removeQuery(name);
-            for (String value : values) {
-                ub.addQuery(name, searchName(name, new BigInteger(value)));
-            }
-        }
-        return ub.toString();
-    }
 }

@@ -1,6 +1,7 @@
 package org.opendaylight.iotdm.robot.api;
 
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 
 /**
  * Created by wenxshi on 3/30/15.
@@ -8,5 +9,9 @@ import org.opendaylight.iotdm.primitive.RequestPrimitive;
 public interface Plugin {
     void start();
     void close();
+<<<<<<< HEAD
     String sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port);
+=======
+    ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive,String host,String port,String timeout);
+>>>>>>> coap
 }

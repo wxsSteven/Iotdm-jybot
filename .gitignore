@@ -6,3 +6,4 @@ output.xml
 report.html
 *.iml
 .idea
+**/.DS_Store
