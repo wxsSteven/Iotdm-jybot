@@ -46,7 +46,6 @@ public class RequestPrimitiveFactory {
         request.setFrom("http://localhost:8989");
         request.setRequestIdentifier("1234");
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
-        request.setName("Bill");
         request.setContent(pc);
         request.setOriginatingTimestamp("100000");
         request.setRequestExpirationTimestamp("200000");
@@ -59,7 +58,7 @@ public class RequestPrimitiveFactory {
             e.printStackTrace();
         }
 
-        request.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.value());
+//        request.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.value());
         request.setEventCategory(OneM2M.StdEventCats.DEFAULT.value().toString());
         request.setDeliveryAggregation(true);
         request.setGroupRequestIdentifier("12345");

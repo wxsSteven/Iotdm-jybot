@@ -2,12 +2,14 @@ package junit;
 
 
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
+import org.opendaylight.iotdm.primitive.FilterCriteria;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.logging.FileHandler;
 
 
 /**
@@ -170,7 +172,7 @@ public class CreateTest {
         responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CONFLICT.value(), responsePrimitive);
         //todo duplicate name error
     }
 
@@ -222,4 +224,5 @@ public class CreateTest {
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
         OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), responsePrimitive);
     }
+
 }

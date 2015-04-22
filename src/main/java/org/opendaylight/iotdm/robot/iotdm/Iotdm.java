@@ -240,7 +240,7 @@ public class Iotdm {
         plugin.start();
         System.out.println("Request:");
         ResponsePrimitive responsePrimitive = plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
-        String rst = GsonUtil.toPrettyJson(responsePrimitive);
+        String rst = GsonUtil.jsonToPrettyJson(GsonUtil.jsonToFullNameJson(GsonUtil.toJson(responsePrimitive)));
         System.out.print("\n\n");
         System.out.println("Response:");
         System.out.println(rst);

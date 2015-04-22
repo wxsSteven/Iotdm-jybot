@@ -987,10 +987,18 @@ public class OneM2M {
                 this.fullName = fullName;
             }
 
-            public static String shortName(String name) {
+            public static String toShortName(String name) {
                 for (OneM2M.Name.ResourceAttribute attr : OneM2M.Name.ResourceAttribute.values()) {
                     if (attr.fullName.equals(name))
                         return attr.shortName;
+                }
+                return name;
+            }
+
+            public static String toFullName(String name) {
+                for (OneM2M.Name.ResourceAttribute attr : OneM2M.Name.ResourceAttribute.values()) {
+                    if (attr.shortName.equals(name))
+                        return attr.fullName;
                 }
                 return name;
             }
@@ -1057,10 +1065,18 @@ public class OneM2M {
                 this.fullName = fullName;
             }
 
-            public static String shortName(String name) {
+            public static String toShortName(String name) {
                 for (OneM2M.Name.ComplexType attr : OneM2M.Name.ComplexType.values()) {
                     if (attr.fullName.equals(name))
                         return attr.shortName;
+                }
+                return name;
+            }
+
+            public static String toFullName(String name) {
+                for (OneM2M.Name.ComplexType attr : OneM2M.Name.ComplexType.values()) {
+                    if (attr.shortName.equals(name))
+                        return attr.fullName;
                 }
                 return name;
             }

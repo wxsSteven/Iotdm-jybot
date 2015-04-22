@@ -121,14 +121,20 @@ public class Coap implements Plugin {
         }
 
         String payload = response.getPayloadString();
-        try {
-            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-            for (int i = 0; i < array.size(); i++) {
-                responsePrimitive.getContent().getAny().add(array.get(i).toString());
-            }
-        } catch (Exception e) {
 
-        }
+//        Todo deprecated soon
+        responsePrimitive.getContent().getAny().add(GsonUtil.fromJson(payload));
+
+//      Todo use below in future
+//        try {
+//            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
+//            for (int i = 0; i < array.size(); i++) {
+//                responsePrimitive.getContent().getAny().add(array.get(i).toString());
+//            }
+//        } catch (Exception e) {
+//
+//        }
+
         return responsePrimitive;
     }
 

@@ -151,10 +151,17 @@ public class Http implements Plugin {
         String payload = "";
         try {
             payload = exchange.getResponseContent();
-            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-            for (int i = 0; i < array.size(); i++) {
-                pc.getAny().add(GsonUtil.fromJson(array.get(i).toString()));
-            }
+
+//            TODO uncomment below-------------------------------
+//            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
+//            for (int i = 0; i < array.size(); i++) {
+//                pc.getAny().add(GsonUtil.fromJson(array.get(i).toString()));
+//            }
+//            --------------------------------------------------
+
+//        Todo deprecated soon
+            pc.getAny().add(GsonUtil.fromJson(payload));
+
         } catch (Exception e) {
             pc.getAny().add(payload);
         }

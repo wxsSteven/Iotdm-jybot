@@ -123,7 +123,7 @@ public class Prepare {
         if (requestPrimitive == null)
             return null;
         String str = GsonUtil.toPrettyJson(requestPrimitive.getContent());
-        return GsonUtil.jsonToShortJson(str);
+        return GsonUtil.jsonToShortNameJson(str);
     }
 
 }
