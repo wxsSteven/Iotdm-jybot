@@ -238,12 +238,14 @@ public class Iotdm {
         }
 
         plugin.start();
-        System.out.println("Request:");
+        System.out.println("--------------------------RequestPrimitive:-------------------------------");
+        System.out.println(GsonUtil.toPrettyJson(requestPrimitive));
+        System.out.println("\n\n");
+
         ResponsePrimitive responsePrimitive = plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
-        String rst = GsonUtil.jsonToPrettyJson(GsonUtil.jsonToFullNameJson(GsonUtil.toJson(responsePrimitive)));
-        System.out.print("\n\n");
-        System.out.println("Response:");
-        System.out.println(rst);
+
+        System.out.println("--------------------------ResponsePrimitive:-----------------------------");
+        System.out.println(GsonUtil.jsonToPrettyJson(GsonUtil.jsonToFullNameJson(GsonUtil.toJson(responsePrimitive))));
         plugin.close();
         return responsePrimitive;
     }

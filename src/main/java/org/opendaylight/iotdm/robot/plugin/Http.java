@@ -3,6 +3,7 @@ package org.opendaylight.iotdm.robot.plugin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.californium.core.coap.Response;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.http.HttpFields;
@@ -72,6 +73,21 @@ public class Http implements Plugin {
 
     public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive, String host, String port, String timeout) {
         ContentExchange exchange = new ContentExchange(true);
+        prepareHttpRequest(exchange, requestPrimitive, host, port);
+
+        try {
+            httpClient.send(exchange);
+            exchange.waitForDone();
+        } catch (Exception e) {
+        }
+
+        ResponsePrimitive responsePrimitive=new ResponsePrimitive();
+        prepareResponsePrimitive(exchange, responsePrimitive);
+        return responsePrimitive;
+    }
+
+    private void prepareHttpRequest(ContentExchange exchange,RequestPrimitive requestPrimitive,String host,String port){
+
         String url = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
         String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
 
@@ -98,29 +114,19 @@ public class Http implements Plugin {
                 break;
             case NOTIFY:
                 exchange.setMethod(NOTIFY_IN_HTTP);
-            default:
-                return null;
         }
 
+        System.out.println("Http Request:\n");
         System.out.println("Uri:");
         System.out.println(url + "\n");
         System.out.println("Header:");
-        System.out.println(exchange.getRequestFields().toString() + "\n");
+        System.out.println(exchange.getRequestFields().toString());
         System.out.println("Payload:");
         System.out.println(payload);
-
-
-        try {
-            httpClient.send(exchange);
-            exchange.waitForDone();
-        } catch (Exception e) {
-        }
-        ResponsePrimitive responsePrimitive = prepareResponsePrimitive(exchange);
-        return responsePrimitive;
+        System.out.println();
     }
 
-    private ResponsePrimitive prepareResponsePrimitive(ContentExchange exchange) {
-        ResponsePrimitive responsePrimitive = new ResponsePrimitive();
+    private void prepareResponsePrimitive(ContentExchange exchange,ResponsePrimitive responsePrimitive) {
         HttpFields fields = exchange.getResponseFields();
 
         if (fields != null) {
@@ -151,22 +157,14 @@ public class Http implements Plugin {
         String payload = "";
         try {
             payload = exchange.getResponseContent();
-
-//            TODO uncomment below-------------------------------
-//            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-//            for (int i = 0; i < array.size(); i++) {
-//                pc.getAny().add(GsonUtil.fromJson(array.get(i).toString()));
-//            }
-//            --------------------------------------------------
-
-//        Todo deprecated soon
-            pc.getAny().add(GsonUtil.fromJson(payload));
-
+            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) {
+                pc.getAny().add(GsonUtil.fromJson(array.get(i).toString()));
+            }
         } catch (Exception e) {
             pc.getAny().add(payload);
         }
         responsePrimitive.setContent(pc);
-        return responsePrimitive;
     }
 
 

@@ -5,11 +5,11 @@ import com.google.gson.JsonParser;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.*;
+import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
-import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.primitive.ResponsePrimitive;
+import org.opendaylight.iotdm.primitive.*;
 import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
@@ -64,23 +64,8 @@ public class Coap implements Plugin {
             default:
                 return null;
         }
+        prepareRequest(request,requestPrimitive,host,port);
 
-        String uri =Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
-        String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
-
-        request.setURI(uri);
-        request.setPayload(payload);
-        prepareOptions(requestPrimitive, request.getOptions());
-
-
-        System.out.println("Uri:");
-        System.out.println(uri + "\n");
-        System.out.println("Option:");
-        System.out.println(request.getOptions().toString() + "\n");
-        System.out.println("Payload:");
-        System.out.println(payload);
-
-        request.setTimedOut(true);
         Response response = null;
         try {
             request.send();
@@ -89,13 +74,31 @@ public class Coap implements Plugin {
                 return null;
         } catch (Exception e) {
         }
-
-        ResponsePrimitive responsePrimitive = prepareResponsePrimitive(response);
+        ResponsePrimitive responsePrimitive=new ResponsePrimitive();
+        prepareResponsePrimitive(response,responsePrimitive);
         return responsePrimitive;
     }
 
-    private ResponsePrimitive prepareResponsePrimitive(Response response) {
-        ResponsePrimitive responsePrimitive = new ResponsePrimitive();
+    private void prepareRequest(Request request, RequestPrimitive requestPrimitive,String host,String port){
+        String uri =Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
+        String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
+
+        request.setURI(uri);
+        request.setPayload(payload);
+        request.setTimedOut(true);
+        prepareOptions(requestPrimitive, request.getOptions());
+
+        System.out.println("CoAP Request:");
+        System.out.println("Uri:");
+        System.out.println(uri + "\n");
+        System.out.println("Option:");
+        System.out.println(request.getOptions().toString() + "\n");
+        System.out.println("Payload:");
+        System.out.println(payload);
+    }
+
+
+    private void prepareResponsePrimitive(Response response,ResponsePrimitive responsePrimitive) {
 
         for (Option option : response.getOptions().asSortedList()) {
             switch (OneM2M.CoAP.Option.getEnum(option.getIntegerValue())) {
@@ -122,20 +125,14 @@ public class Coap implements Plugin {
 
         String payload = response.getPayloadString();
 
-//        Todo deprecated soon
-        responsePrimitive.getContent().getAny().add(GsonUtil.fromJson(payload));
+        try {
+            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) {
+                responsePrimitive.getContent().getAny().add(array.get(i).toString());
+            }
+        } catch (Exception e) {
 
-//      Todo use below in future
-//        try {
-//            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-//            for (int i = 0; i < array.size(); i++) {
-//                responsePrimitive.getContent().getAny().add(array.get(i).toString());
-//            }
-//        } catch (Exception e) {
-//
-//        }
-
-        return responsePrimitive;
+        }
     }
 
     private void prepareOptions(RequestPrimitive requestPrimitive, OptionSet os) {

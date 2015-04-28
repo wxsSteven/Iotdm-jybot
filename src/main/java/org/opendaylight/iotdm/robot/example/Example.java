@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.security.Timestamp;
 
 /**
  * Created by wenxshi on 3/4/15.
@@ -28,6 +29,7 @@ public class Example {
         requestPrimitive.setResultContent(null);
         requestPrimitive.setTo("/InCSE1");
         iotdm.sendRequestAndGetResponse(requestPrimitive);
+
     }
 
     public static void xml(){
