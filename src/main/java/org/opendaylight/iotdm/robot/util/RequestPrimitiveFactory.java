@@ -1,5 +1,6 @@
 package org.opendaylight.iotdm.robot.util;
 
+import org.joda.time.LocalTime;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
 
@@ -47,10 +48,10 @@ public class RequestPrimitiveFactory {
         request.setRequestIdentifier("1234");
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         request.setContent(pc);
-        request.setOriginatingTimestamp("100000");
-        request.setRequestExpirationTimestamp("200000");
-        request.setResultExpirationTimestamp("200000");
-        request.setOperationExecutionTime("100000");
+        request.setOriginatingTimestamp(Onem2mDateTime.getCurrDateTime());
+        request.setRequestExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
+        request.setResultExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
+        request.setOperationExecutionTime(Onem2mDateTime.getCurrDateTime());
         request.setResponseType(rti);
         try {
             request.setResultPersistence(DatatypeFactory.newInstance().newDuration(10000000));
