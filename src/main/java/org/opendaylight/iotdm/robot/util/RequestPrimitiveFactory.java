@@ -1,6 +1,5 @@
 package org.opendaylight.iotdm.robot.util;
 
-import org.joda.time.LocalTime;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
 
@@ -58,8 +57,7 @@ public class RequestPrimitiveFactory {
         } catch (DatatypeConfigurationException e) {
             e.printStackTrace();
         }
-
-//        request.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.value());
+        request.setResultContent(OneM2M.ResultContent.ATTRIBUTES.value());
         request.setEventCategory(OneM2M.StdEventCats.DEFAULT.value().toString());
         request.setDeliveryAggregation(true);
         request.setGroupRequestIdentifier("12345");

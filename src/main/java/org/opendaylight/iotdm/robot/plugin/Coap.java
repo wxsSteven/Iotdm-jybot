@@ -124,15 +124,7 @@ public class Coap implements Plugin {
         }
 
         String payload = response.getPayloadString();
-
-        try {
-            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-            for (int i = 0; i < array.size(); i++) {
-                responsePrimitive.getContent().getAny().add(array.get(i).toString());
-            }
-        } catch (Exception e) {
-
-        }
+        Prepare.contentOfResponsePrimitive(payload,responsePrimitive);
     }
 
     private void prepareOptions(RequestPrimitive requestPrimitive, OptionSet os) {

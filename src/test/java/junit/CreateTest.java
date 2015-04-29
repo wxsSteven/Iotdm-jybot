@@ -26,7 +26,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.ACCESS_DENIED.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.NOT_FOUND.value(),responsePrimitive);
         //TODO check with error message in content
     }
 
@@ -39,7 +39,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.ACCESS_DENIED.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.NOT_FOUND.value(),responsePrimitive);
         //TODO check with error message in content
     }
 
@@ -52,7 +52,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.ACCESS_DENIED.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(),responsePrimitive);
         //TODO valid the content
 
     }
@@ -92,7 +92,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(),responsePrimitive);
         //TODO check with error message in content
     }
 
@@ -104,7 +104,6 @@ public class CreateTest {
 
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
-        OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
         OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(),responsePrimitive);
         //TODO check with error message in content
     }
@@ -145,7 +144,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(),responsePrimitive);
         //TODO valid content
     }
 
@@ -158,7 +157,7 @@ public class CreateTest {
 
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(),responsePrimitive);
     }
 
     @Test
@@ -185,7 +184,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(), responsePrimitive);
     }
 
 
@@ -198,7 +197,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CONTENTS_UNACCEPTABLE.value(), responsePrimitive);
     }
 
     @Test
@@ -210,7 +209,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive,responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(),responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CONTENTS_UNACCEPTABLE.value(),responsePrimitive);
         //TODO check with error message in content
     }
 
@@ -222,7 +221,7 @@ public class CreateTest {
         ResponsePrimitive responsePrimitive=iotdm.sendRequestAndGetResponse(requestPrimitive);
 
         OneM2M.Assert.assertEqualRequestIdentifer(requestPrimitive, responsePrimitive);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), responsePrimitive);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CREATED.value(), responsePrimitive);
     }
 
 }

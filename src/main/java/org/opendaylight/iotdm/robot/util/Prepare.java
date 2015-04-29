@@ -1,10 +1,11 @@
 package org.opendaylight.iotdm.robot.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.http.client.utils.URIBuilder;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
-import org.opendaylight.iotdm.primitive.Attribute;
-import org.opendaylight.iotdm.primitive.FilterCriteria;
-import org.opendaylight.iotdm.primitive.RequestPrimitive;
+import org.opendaylight.iotdm.primitive.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -126,4 +127,20 @@ public class Prepare {
         return GsonUtil.jsonToShortNameJson(str);
     }
 
+    public static void contentOfResponsePrimitive(String payload,ResponsePrimitive responsePrimitive){
+        responsePrimitive.setContent(new PrimitiveContent());
+        try {
+            JsonElement element = new JsonParser().parse(payload);
+            if (element.isJsonObject()) {
+                responsePrimitive.getContent().getAny().add(element.getAsJsonObject());
+            } else if (element.isJsonArray()) {
+                JsonArray array = element.getAsJsonObject().get("any").getAsJsonArray();
+                for (int i = 0; i < array.size(); i++) {
+                    responsePrimitive.getContent().getAny().add(GsonUtil.fromJson(array.get(i).toString()));
+                }
+            }
+        } catch (Exception e) {
+            responsePrimitive.getContent().getAny().add(payload);
+        }
+    }
 }

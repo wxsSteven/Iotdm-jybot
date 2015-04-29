@@ -1,9 +1,9 @@
 package org.opendaylight.iotdm.robot.plugin;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.californium.core.coap.Response;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.http.HttpFields;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 
 /**
@@ -32,7 +32,7 @@ import java.math.BigInteger;
  */
 public class Http implements Plugin {
 
-    public static final String SCHEME="http";
+    public static final String SCHEME = "http";
     public static final int PORT = 8989;
     public static final String SCHEMA = "http";
     public static final String CREATE_IN_HTTP = "post";
@@ -81,12 +81,12 @@ public class Http implements Plugin {
         } catch (Exception e) {
         }
 
-        ResponsePrimitive responsePrimitive=new ResponsePrimitive();
+        ResponsePrimitive responsePrimitive = new ResponsePrimitive();
         prepareResponsePrimitive(exchange, responsePrimitive);
         return responsePrimitive;
     }
 
-    private void prepareHttpRequest(ContentExchange exchange,RequestPrimitive requestPrimitive,String host,String port){
+    private void prepareHttpRequest(ContentExchange exchange, RequestPrimitive requestPrimitive, String host, String port) {
 
         String url = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
         String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
@@ -126,7 +126,7 @@ public class Http implements Plugin {
         System.out.println();
     }
 
-    private void prepareResponsePrimitive(ContentExchange exchange,ResponsePrimitive responsePrimitive) {
+    private void prepareResponsePrimitive(ContentExchange exchange, ResponsePrimitive responsePrimitive) {
         HttpFields fields = exchange.getResponseFields();
 
         if (fields != null) {
@@ -153,18 +153,13 @@ public class Http implements Plugin {
             }
         }
 
-        PrimitiveContent pc = new PrimitiveContent();
         String payload = "";
-        try {
-            payload = exchange.getResponseContent();
-            JsonArray array = new JsonParser().parse(payload).getAsJsonObject().get("any").getAsJsonArray();
-            for (int i = 0; i < array.size(); i++) {
-                pc.getAny().add(GsonUtil.fromJson(array.get(i).toString()));
-            }
-        } catch (Exception e) {
-            pc.getAny().add(payload);
+        try{
+            payload=exchange.getResponseContent();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        responsePrimitive.setContent(pc);
+        Prepare.contentOfResponsePrimitive(payload,responsePrimitive);
     }
 
 
