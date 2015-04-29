@@ -26,8 +26,13 @@ public class Example {
     public static void main(String[] args) {
         Iotdm iotdm = new Iotdm();
         RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
-        requestPrimitive.setResultContent(null);
-        requestPrimitive.setTo("/InCSE1");
+        AE ae=new AE();
+        ae.setAEID("jsjfa");
+        ae.setAppID("1234");
+        requestPrimitive.getContent().getAny().set(0,ae);
+
+//        requestPrimitive.setResultContent(null);
+//        requestPrimitive.setTo("/InCSE1");
         iotdm.sendRequestAndGetResponse(requestPrimitive);
 
     }
