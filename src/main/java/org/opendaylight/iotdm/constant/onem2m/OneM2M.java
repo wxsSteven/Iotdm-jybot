@@ -1095,13 +1095,15 @@ public class OneM2M {
         }
 
         public enum ResourceType {
-            AE("aE", "ae"),
-            AE_ANNC("aEAnnc", "aeA"),
+            ACCESS_CONTROL_POLICY("accessControlPolicy","acp"),
+            ACCESS_CONTROL_POLICY_ANNC("accessControlPolicyAnnc","acpA"),
+            AE("AE", "ae"),
+            AE_ANNC("AEAnnc", "aeA"),
             CONTAINER("container", "cnt"),
             CONTAINER_ANNC("containerAnnc", "cntA"),
             CONTENT_INSTANCE("contentInstance", "cin"),
             CONTENT_INSTANCE_ANNC("contentInstanceAnnc", "cinA"),
-            CSE_BASE("cSEBase", "csb"),
+            CSE_BASE("CSEBase", "csb"),
             DELIVERY("delivery", "dlv"),
             EVENT_CONFIG("eventConfig", "evcg"),
             EXEC_INSTANCE("execInstance", "exin"),
