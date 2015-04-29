@@ -769,7 +769,7 @@ public class OneM2M {
 
             public static Primitive getEnum(String name) {
                 for (Primitive p : Primitive.values()) {
-                    if (p.shortName.equals(name) || p.fullName.equals(name))
+                    if (p.shortName.equalsIgnoreCase(name) || p.fullName.equalsIgnoreCase(name))
                         return p;
                 }
                 return null;
@@ -989,7 +989,7 @@ public class OneM2M {
 
             public static String toShortName(String name) {
                 for (OneM2M.Name.ResourceAttribute attr : OneM2M.Name.ResourceAttribute.values()) {
-                    if (attr.fullName.equals(name))
+                    if (attr.fullName.equalsIgnoreCase(name))
                         return attr.shortName;
                 }
                 return name;
@@ -997,7 +997,7 @@ public class OneM2M {
 
             public static String toFullName(String name) {
                 for (OneM2M.Name.ResourceAttribute attr : OneM2M.Name.ResourceAttribute.values()) {
-                    if (attr.shortName.equals(name))
+                    if (attr.shortName.equalsIgnoreCase(name))
                         return attr.fullName;
                 }
                 return name;
@@ -1067,7 +1067,7 @@ public class OneM2M {
 
             public static String toShortName(String name) {
                 for (OneM2M.Name.ComplexType attr : OneM2M.Name.ComplexType.values()) {
-                    if (attr.fullName.equals(name))
+                    if (attr.fullName.equalsIgnoreCase(name))
                         return attr.shortName;
                 }
                 return name;
@@ -1075,7 +1075,7 @@ public class OneM2M {
 
             public static String toFullName(String name) {
                 for (OneM2M.Name.ComplexType attr : OneM2M.Name.ComplexType.values()) {
-                    if (attr.shortName.equals(name))
+                    if (attr.shortName.equalsIgnoreCase(name))
                         return attr.fullName;
                 }
                 return name;
