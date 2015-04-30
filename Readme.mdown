@@ -2,35 +2,13 @@
 
 This is java libray based on Robot Framework for iotdm test.
 
-###Pre-install Request
-Make sure python 2.7+ installed properly
-
-###Setup Working Environment
-
-1. Install the jython 2.7+, link: http://www.jython.org/downloads.html
-2. Add the jython into your enviroment variable (PATH);
-3. Download **Source Code** of latest Robot Framework from the link:https://pypi.python.org/pypi/robotframework
-4. At source code directory and run:
-
-```Bash
-    jython setup.py install
-```
 
 ###Testing
 
-1. Add your test case into src/test/java/robot/Test.robot file
+1. Add your robot test case into the fold:src/test/robotframework/acceptance
 
-2.  At root directory of project and run:
-```bash
-mvn clean install
-```
- 
-3.  Make the run.sh executable and run:
-```bash
-./run.sh
-```
+2.1 If you want to do the compile before testing, type in the terminal: mvn clean install
+2.2 If you want to run the robot test directly without compile, type in the terminal: mvn robotframework:run
 
-4.  Report file will be generated in src/test/java/robot fold
+3. Find your robot test report in the fold:target/robotframework-reports
 
-###Future
-All steps in Testing will be handled by maven plugin
