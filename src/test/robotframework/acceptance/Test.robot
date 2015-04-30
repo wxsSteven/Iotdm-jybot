@@ -19,7 +19,7 @@ Create
 
 #---------------  Create And Retrieve  ------------
 
-    
+
 1.11 Valid Input for AE without name
     ${requestPrimitive} =    Get Initilazed Create Request Primitive
     Change Attribute In     ${requestPrimitive}   Set Name    createAE
