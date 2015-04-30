@@ -7,9 +7,15 @@ This is java libray based on Robot Framework for iotdm test.
 
 1 Add your robot test case into the fold:src/test/robotframework/acceptance.
 
-2.1 If you want to do the compile before testing, type in the terminal: mvn clean install.
+2.1 If you want to do the compile before testing, type in the terminal:
+```bash
+mvn clean install
+```
 
-2.2 If you want to run the robot test directly without compile, type in the terminal: mvn robotframework:run.
+2.2 If you want to run the robot test directly without compile, type in the terminal:
+```bash
+mvn robotframework:run
+```
 
 3 Find your robot test report in the fold:target/robotframework-reports.
 
