@@ -1057,8 +1057,9 @@ public class OneM2M {
             AGGREGATED_NOTIFICATION("aggregatedNotification", "agn"),
             AGGREGATED_RESPONSE("aggregatedResponse", "agr");
 
-            private String shortName;
+
             private String fullName;
+            private String shortName;
 
             ComplexType(String fullName, String shortName) {
                 this.shortName = shortName;

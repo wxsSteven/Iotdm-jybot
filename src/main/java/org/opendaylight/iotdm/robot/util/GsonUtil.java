@@ -67,7 +67,7 @@ public class GsonUtil {
                     object1.remove(entry.getKey());
                     object1.add(shortName, e);
                 }
-                jsonToShortNameJsonHelper(entry.getValue(), object1.get(entry.getKey()));
+                jsonToShortNameJsonHelper(entry.getValue(), object1.get(shortName));
             }
         } else if (element.isJsonArray()) {
             JsonArray array = element.getAsJsonArray();

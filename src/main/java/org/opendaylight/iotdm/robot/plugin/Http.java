@@ -98,13 +98,13 @@ public class Http implements Plugin {
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
         prepareHeader(requestPrimitive, exchange);
 
-        OneM2M.Operation x = OneM2M.Operation.CREATE;
         switch (OneM2M.Operation.getEnum(requestPrimitive.getOperation())) {
             case CREATE:
                 exchange.setMethod(CREATE_IN_HTTP);
                 break;
             case RETRIEVE:
                 exchange.setMethod(RETRIEVE_IN_HTTP);
+                exchange.setRequestContentSource(null);
                 break;
             case UPDATE:
                 exchange.setMethod(UPDATE_IN_HTTP);

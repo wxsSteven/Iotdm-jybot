@@ -21,18 +21,18 @@ public class RequestPrimitiveFactory {
         pc.getAny().add(container);
 //FilterCriteria Content construction
         FilterCriteria fc = new FilterCriteria();
-        fc.setCreatedAfter("12345");
-        fc.setCreatedBefore("123344");
+        fc.setCreatedAfter(Onem2mDateTime.getCurrDateTime());
+        fc.setCreatedBefore(Onem2mDateTime.getCurrDateTime());
         fc.setFilterUsage(BigInteger.ONE);
         fc.getLabels().addAll(Arrays.asList("b", "c", "d"));
-        Attribute attribute = new Attribute();
-        attribute.setName("key");
-        attribute.setValue("value");
-        fc.getAttribute().add(attribute);
-        attribute = new Attribute();
-        attribute.setName("key");
-        attribute.setValue("value");
-        fc.getAttribute().add(attribute);
+//        Attribute attribute = new Attribute();
+//        attribute.setName("key");
+//        attribute.setValue("value");
+//        fc.getAttribute().add(attribute);
+//        attribute = new Attribute();
+//        attribute.setName("key");
+//        attribute.setValue("value");
+//        fc.getAttribute().add(attribute);
 //ResponseType construction
         ResponseTypeInfo rti = new ResponseTypeInfo();
         rti.getNotificationURI().add("localhost1");

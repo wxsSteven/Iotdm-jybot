@@ -2,6 +2,7 @@ package org.opendaylight.iotdm.robot.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.client.utils.URIBuilder;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
@@ -130,11 +131,11 @@ public class Prepare {
     public static void contentOfResponsePrimitive(String payload,ResponsePrimitive responsePrimitive){
         responsePrimitive.setContent(new PrimitiveContent());
         try {
-            JsonElement element = new JsonParser().parse(payload);
-            if (element.isJsonObject()) {
-                responsePrimitive.getContent().getAny().add(element.getAsJsonObject());
-            } else if (element.isJsonArray()) {
-                JsonArray array = element.getAsJsonObject().get("any").getAsJsonArray();
+            JsonObject object = new JsonParser().parse(payload).getAsJsonObject();
+            if (!object.has("any")) {
+                responsePrimitive.getContent().getAny().add(object);
+            } else {
+                JsonArray array = object.get("any").getAsJsonArray();
                 for (int i = 0; i < array.size(); i++) {
                     responsePrimitive.getContent().getAny().add(GsonUtil.fromJson(array.get(i).toString()));
                 }

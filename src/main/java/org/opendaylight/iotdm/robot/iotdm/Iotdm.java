@@ -118,6 +118,8 @@ public class Iotdm {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
         rp.setOperation(OneM2M.Operation.RETRIEVE.value());
         rp.setResourceType(null);
+        rp.setContent(null);
+        rp.setFilterCriteria(null);
         rp.setName(null);
         return rp;
     }

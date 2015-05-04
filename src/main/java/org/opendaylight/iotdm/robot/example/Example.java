@@ -4,6 +4,7 @@ import com.sun.jmx.remote.internal.Unmarshal;
 import org.opendaylight.iotdm.primitive.AE;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.robot.iotdm.Iotdm;
+import org.opendaylight.iotdm.robot.util.GsonUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -24,16 +25,27 @@ import java.security.Timestamp;
  */
 public class Example {
     public static void main(String[] args) {
-        Iotdm iotdm = new Iotdm();
-        RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
-        AE ae=new AE();
-        ae.setAEID("jsjfa");
-        ae.setAppID("1234");
-        requestPrimitive.getContent().getAny().set(0,ae);
+//        Iotdm iotdm = new Iotdm();
+//        RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
+//        AE ae=new AE();
+//        ae.setAEID("jsjfa");
+//        ae.setAppID("1234");
+//        requestPrimitive.getContent().getAny().set(0,ae);
 
 //        requestPrimitive.setResultContent(null);
 //        requestPrimitive.setTo("/InCSE1");
-        iotdm.sendRequestAndGetResponse(requestPrimitive);
+//        iotdm.sendRequestAndGetResponse(requestPrimitive);
+
+        String str="{\n" +
+                "  \"any\": [\n" +
+                "    {\n" +
+                "      \"labels\": [\n" +
+                "        \"iphone\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+        System.out.println(GsonUtil.jsonToShortNameJson(str));
 
     }
 
