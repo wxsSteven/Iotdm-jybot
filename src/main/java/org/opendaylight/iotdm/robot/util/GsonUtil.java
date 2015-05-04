@@ -106,7 +106,7 @@ public class GsonUtil {
                     object1.remove(entry.getKey());
                     object1.add(fullName, e);
                 }
-                jsonToFullNameJsonHelper(entry.getValue(), object1.get(entry.getKey()));
+                jsonToFullNameJsonHelper(entry.getValue(), object1.get(fullName));
             }
         } else if (element.isJsonArray()) {
             JsonArray array = element.getAsJsonArray();

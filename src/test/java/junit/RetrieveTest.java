@@ -252,7 +252,7 @@ public class RetrieveTest {
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
 
     }
 
@@ -265,7 +265,7 @@ public class RetrieveTest {
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
 
     }
 
@@ -278,7 +278,7 @@ public class RetrieveTest {
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
 
     }
 
@@ -292,7 +292,7 @@ public class RetrieveTest {
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
 
     }
 
