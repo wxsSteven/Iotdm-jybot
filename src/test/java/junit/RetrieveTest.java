@@ -7,11 +7,14 @@ import org.opendaylight.iotdm.robot.iotdm.Iotdm;
 import org.opendaylight.iotdm.robot.util.Onem2mDateTime;
 
 import java.math.BigInteger;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by wenxshi on 5/1/15.
  */
 public class RetrieveTest {
+    private static List<String> timeStamp=new LinkedList<>();
 
     @BeforeClass
     public static void build_Resource_Tree() throws InterruptedException {
@@ -33,7 +36,7 @@ public class RetrieveTest {
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         request.setContent(content);
         iotdm.sendRequestAndGetResponse(request);
-
+        timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
         request.setName("containerChild1");
@@ -42,7 +45,7 @@ public class RetrieveTest {
         container.getLabels().set(0, "ipad");
         content.getAny().set(0, container);
         iotdm.sendRequestAndGetResponse(request);
-
+        timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
         request.setName("containerChild2");
@@ -51,7 +54,7 @@ public class RetrieveTest {
         container.getLabels().set(0, "iphone");
         content.getAny().set(0, container);
         iotdm.sendRequestAndGetResponse(request);
-
+        timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
         request.setName("contentInstanceChild1");
@@ -60,7 +63,7 @@ public class RetrieveTest {
         contentInstance.getLabels().set(0, "iphone");
         content.getAny().set(0, contentInstance);
         iotdm.sendRequestAndGetResponse(request);
-
+        timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
         request.setName("contentInstanceChild2");
@@ -69,7 +72,7 @@ public class RetrieveTest {
         contentInstance.getLabels().set(0, "iphone");
         content.getAny().set(0, contentInstance);
         iotdm.sendRequestAndGetResponse(request);
-
+        timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
     }
 
