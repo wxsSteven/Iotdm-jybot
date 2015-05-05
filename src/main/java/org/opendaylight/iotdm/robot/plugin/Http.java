@@ -111,6 +111,7 @@ public class Http implements Plugin {
                 break;
             case DELETE:
                 exchange.setMethod(DELETE_IN_HTTP);
+                exchange.setRequestContentSource(null);
                 break;
             case NOTIFY:
                 exchange.setMethod(NOTIFY_IN_HTTP);

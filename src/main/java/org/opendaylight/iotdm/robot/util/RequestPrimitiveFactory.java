@@ -16,7 +16,7 @@ public class RequestPrimitiveFactory {
 //PrimitiveContent construction
         PrimitiveContent pc = new PrimitiveContent();
         Container container=new Container();
-        container.setOntologyRef("icloud");
+        container.setOntologyRef("mobile");
         container.setCreator("iphone");
         pc.getAny().add(container);
 //FilterCriteria Content construction
@@ -38,7 +38,7 @@ public class RequestPrimitiveFactory {
         rti.getNotificationURI().add("localhost1");
         rti.getNotificationURI().add("localhost2");
         rti.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
-//RequestPrimitive Constuction
+//RequestPrimitive Construction
         RequestPrimitive request = new RequestPrimitive();
 
         request.setOperation(OneM2M.Operation.CREATE.value());
@@ -48,9 +48,9 @@ public class RequestPrimitiveFactory {
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         request.setContent(pc);
         request.setOriginatingTimestamp(Onem2mDateTime.getCurrDateTime());
-        request.setRequestExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
-        request.setResultExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
-        request.setOperationExecutionTime(Onem2mDateTime.getCurrDateTime());
+//        request.setRequestExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
+//        request.setResultExpirationTimestamp(Onem2mDateTime.getCurrDateTime());
+//        request.setOperationExecutionTime(Onem2mDateTime.getCurrDateTime());
         request.setResponseType(rti);
         try {
             request.setResultPersistence(DatatypeFactory.newInstance().newDuration(10000000));

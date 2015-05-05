@@ -1,5 +1,6 @@
 package junit;
 
+import junit.util.ResourceTree;
 import org.junit.*;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
@@ -7,87 +8,28 @@ import org.opendaylight.iotdm.robot.iotdm.Iotdm;
 import org.opendaylight.iotdm.robot.util.Onem2mDateTime;
 
 import java.math.BigInteger;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by wenxshi on 5/1/15.
  */
 public class RetrieveTest {
-    private static List<String> timeStamp=new LinkedList<>();
 
+    private static Iotdm iotdm = new Iotdm();
+    
     @BeforeClass
     public static void build_Resource_Tree() throws InterruptedException {
-        Iotdm iotdm=new Iotdm();
-        RequestPrimitive request=iotdm.getInitilazedCreateRequestPrimitive();
-        PrimitiveContent content=new PrimitiveContent();
-        Container container=new Container();
-        ContentInstance contentInstance=new ContentInstance();
-
-        container.getLabels().add("default");
-        contentInstance.getLabels().add("default");
-        content.getAny().add(container);
-        container.setCreator("mac");
-        contentInstance.setContent("data");
-
-
-        request.setName("container");
-        request.setTo("/InCSE1");
-        request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
-        request.setContent(content);
-        iotdm.sendRequestAndGetResponse(request);
-        timeStamp.add(Onem2mDateTime.getCurrDateTime());
-        Thread.sleep(1000);
-
-        request.setName("containerChild1");
-        request.setTo("/InCSE1/container");
-        request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
-        container.getLabels().set(0, "ipad");
-        content.getAny().set(0, container);
-        iotdm.sendRequestAndGetResponse(request);
-        timeStamp.add(Onem2mDateTime.getCurrDateTime());
-        Thread.sleep(1000);
-
-        request.setName("containerChild2");
-        request.setTo("/InCSE1/container");
-        request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
-        container.getLabels().set(0, "iphone");
-        content.getAny().set(0, container);
-        iotdm.sendRequestAndGetResponse(request);
-        timeStamp.add(Onem2mDateTime.getCurrDateTime());
-        Thread.sleep(1000);
-
-        request.setName("contentInstanceChild1");
-        request.setTo("/InCSE1/container");
-        request.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
-        contentInstance.getLabels().set(0, "iphone");
-        content.getAny().set(0, contentInstance);
-        iotdm.sendRequestAndGetResponse(request);
-        timeStamp.add(Onem2mDateTime.getCurrDateTime());
-        Thread.sleep(1000);
-
-        request.setName("contentInstanceChild2");
-        request.setTo("/InCSE1/container");
-        request.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
-        contentInstance.getLabels().set(0, "iphone");
-        content.getAny().set(0, contentInstance);
-        iotdm.sendRequestAndGetResponse(request);
-        timeStamp.add(Onem2mDateTime.getCurrDateTime());
-        Thread.sleep(1000);
+        ResourceTree.buildResourceTree();
     }
 
     @AfterClass
     public static void clean_Resource_Tree(){
-        Iotdm iotdm=new Iotdm();
-        RequestPrimitive request = iotdm.getInitilazedDeleteRequestPrimitive();
-        request.setTo("/InCSE1/container");
-        iotdm.sendRequestAndGetResponse(request);
+        ResourceTree.cleanResourceTree();
     }
 
 
     @Test
     public void to__Is__Null(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest=iotdm.getInitilazedRetrieveRequestPrimitive();
         retrieveRequest.setTo(null);
 
@@ -102,7 +44,7 @@ public class RetrieveTest {
 
     @Test
     public void to__Is__Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest=iotdm.getInitilazedRetrieveRequestPrimitive();
         retrieveRequest.setTo("/abcjd");
 
@@ -115,9 +57,9 @@ public class RetrieveTest {
 
     @Test
     public void to__Is__Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest=iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
 
@@ -129,9 +71,9 @@ public class RetrieveTest {
 
     @Test
     public void from_Is_Null(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setFrom(null);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -143,9 +85,9 @@ public class RetrieveTest {
 
     @Test
     public void from_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setFrom("abcde");
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -157,9 +99,9 @@ public class RetrieveTest {
 
     @Test
     public void from_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setFrom("abcde");
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -171,9 +113,9 @@ public class RetrieveTest {
 
     @Test
     public void requestIdentifer_Is_Null(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setRequestIdentifier(null);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -184,9 +126,9 @@ public class RetrieveTest {
 
     @Test
     public void responseType_Is_Null(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResponseType(null);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -196,9 +138,9 @@ public class RetrieveTest {
 
     @Test
     public void responseType_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         ResponseTypeInfo info=new ResponseTypeInfo();
         info.setResponseType(BigInteger.valueOf(-1));
         retrieveRequest.setResponseType(info);
@@ -209,24 +151,52 @@ public class RetrieveTest {
     }
 
     @Test
-    public void responseType_Is_valid(){
-        Iotdm iotdm=new Iotdm();
+    public void responseType_Is_Blocking_Request(){
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         ResponseTypeInfo info=new ResponseTypeInfo();
-        info.setResponseType(BigInteger.valueOf(-1));
+        info.setResponseType(OneM2M.ResponseType.BLOCKING_REQUEST.value());
         retrieveRequest.setResponseType(info);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
+    }
+
+    @Test
+    public void responseType_Is_Non_Blocking_Request_Asynch(){
+        
+        RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
+        retrieveRequest.setTo(ResourceTree.PATH);
+        ResponseTypeInfo info=new ResponseTypeInfo();
+        info.setResponseType(OneM2M.ResponseType.NON_BLOCKING_REQUEST_ASYNCH.value());
+        retrieveRequest.setResponseType(info);
+
+        ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
+        OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.NON_BLOCKING_REQUEST_NOT_SUPPORTED.value(), retrieveResponse);
+    }
+
+    @Test
+    public void responseType_Is_Non_Blocking_Request_Synch(){
+        
+        RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
+        retrieveRequest.setTo(ResourceTree.PATH);
+        ResponseTypeInfo info=new ResponseTypeInfo();
+        info.setResponseType(OneM2M.ResponseType.NON_BLOCKING_REQUEST_SYNCH.value());
+        retrieveRequest.setResponseType(info);
+
+        ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
+        OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.NON_BLOCKING_REQUEST_NOT_SUPPORTED.value(), retrieveResponse);
     }
 
     @Test
     public void resultContent_Is_Null(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(null);
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -236,9 +206,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(BigInteger.valueOf(-1));
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -248,9 +218,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Nothing(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.NOTHING.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -261,22 +231,22 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Attributes(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.ATTRIBUTES.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), retrieveResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
 
     }
 
     @Test
     public void resultContent_Is_Hierarchical_Address(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.HIERARCHICAL_ADDRESS.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -288,9 +258,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Hierarchical_Address_And_Attributes(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.HIERARCHICAL_ADDRESS_AND_ATTRIBUTES.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -302,9 +272,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Attributes_And_Child_Resources(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCES.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -315,9 +285,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Attributes_And_Child_Resource_References(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCE_REFERENCES.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -328,9 +298,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Child_Resource_References(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.CHILD_RESOURCE_REFERENCES.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -341,9 +311,9 @@ public class RetrieveTest {
 
     @Test
     public void resultContent_Is_Original_Resource(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         retrieveRequest.setResultContent(OneM2M.ResultContent.ORIGINAL_RESOURCE.value());
 
         ResponsePrimitive retrieveResponse=iotdm.sendRequestAndGetResponse(retrieveRequest);
@@ -353,9 +323,9 @@ public class RetrieveTest {
 
     @Test
     public void createdBefore_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setCreatedBefore("dfjajdnf");
@@ -368,9 +338,9 @@ public class RetrieveTest {
 
     @Test
     public void createdBefore_Is_valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setCreatedBefore(Onem2mDateTime.getCurrDateTime());
@@ -383,9 +353,9 @@ public class RetrieveTest {
 
     @Test
     public void createdAfter_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setCreatedAfter("dfjajdnf");
@@ -398,9 +368,9 @@ public class RetrieveTest {
 
     @Test
     public void createdAfter_Is_valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setCreatedAfter(Onem2mDateTime.getCurrDateTime());
@@ -413,9 +383,9 @@ public class RetrieveTest {
 
     @Test
     public void modifiedSince_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setModifiedSince("dfjajdnf");
@@ -428,9 +398,9 @@ public class RetrieveTest {
 
     @Test
     public void modifiedSince_Is_valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setModifiedSince(Onem2mDateTime.getCurrDateTime());
@@ -443,9 +413,9 @@ public class RetrieveTest {
 
     @Test
     public void unmodifiedSince_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setUnmodifiedSince("dfjajdnf");
@@ -458,9 +428,9 @@ public class RetrieveTest {
 
     @Test
     public void unmodifiedSince_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setUnmodifiedSince(Onem2mDateTime.getCurrDateTime());
@@ -473,9 +443,9 @@ public class RetrieveTest {
 
     @Test
     public void  stateTagSmaller_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setStateTagSmaller(BigInteger.valueOf(-1));
@@ -489,9 +459,9 @@ public class RetrieveTest {
 
     @Test
     public void  stateTagSmaller_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setStateTagSmaller(BigInteger.TEN);
@@ -505,9 +475,9 @@ public class RetrieveTest {
 
     @Test
     public void  stateTagBigger_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setStateTagBigger(BigInteger.valueOf(-1));
@@ -521,9 +491,9 @@ public class RetrieveTest {
 
     @Test
     public void  stateTagBigger_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setStateTagBigger(BigInteger.TEN);
@@ -537,9 +507,9 @@ public class RetrieveTest {
 
     @Test
     public void expireBefore_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setExpireBefore("dfjajdnf");
@@ -552,9 +522,9 @@ public class RetrieveTest {
 
     @Test
     public void expireBefore_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setExpireBefore(Onem2mDateTime.getCurrDateTime());
@@ -567,9 +537,9 @@ public class RetrieveTest {
 
     @Test
     public void expireAfter_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setExpireAfter("dfjajdnf");
@@ -582,9 +552,9 @@ public class RetrieveTest {
 
     @Test
     public void labels_Is_Iphone(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.getLabels().add("iphone");
@@ -597,9 +567,9 @@ public class RetrieveTest {
 
     @Test
     public void labels_Is_Iphone_And_Ipad(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.getLabels().add("iphone");
@@ -613,9 +583,9 @@ public class RetrieveTest {
 
     @Test
     public void filterCriteria_resourceType_Is_Invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setResourceType(BigInteger.valueOf(-1));
@@ -628,9 +598,9 @@ public class RetrieveTest {
 
     @Test
     public void filterCriteria_resourceType_Is_Container(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setResourceType(OneM2M.ResourceType.CONTAINER.value());
@@ -643,9 +613,9 @@ public class RetrieveTest {
 
     @Test
     public void filterCriteria_resourceType_Is_ContentInstance(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
@@ -658,9 +628,9 @@ public class RetrieveTest {
 
     @Test
     public void sizeAbove_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setSizeAbove(BigInteger.valueOf(-1));
@@ -673,9 +643,9 @@ public class RetrieveTest {
 
     @Test
     public void sizeAbove_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setSizeAbove(BigInteger.valueOf(1));
@@ -688,9 +658,9 @@ public class RetrieveTest {
 
     @Test
     public void sizeBelow_Is_invalid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setSizeBelow(BigInteger.valueOf(-1));
@@ -703,9 +673,9 @@ public class RetrieveTest {
 
     @Test
     public void sizeBelow_Is_Valid(){
-        Iotdm iotdm=new Iotdm();
+        
         RequestPrimitive retrieveRequest = iotdm.getInitilazedRetrieveRequestPrimitive();
-        retrieveRequest.setTo("/InCSE1/container");
+        retrieveRequest.setTo(ResourceTree.PATH);
         FilterCriteria fc=new FilterCriteria();
 
         fc.setSizeBelow(BigInteger.valueOf(1));
@@ -715,6 +685,4 @@ public class RetrieveTest {
         OneM2M.Assert.assertEqualRequestIdentifer(retrieveRequest, retrieveResponse);
         OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), retrieveResponse);
     }
-        
-
 }

@@ -7,3 +7,6 @@ report.html
 *.iml
 .idea
 **/.DS_Store
+robot.ipr
+robot.iws
+robot.iml

@@ -25,43 +25,10 @@ import java.security.Timestamp;
  */
 public class Example {
     public static void main(String[] args) {
-//        Iotdm iotdm = new Iotdm();
-//        RequestPrimitive requestPrimitive = iotdm.getInitilazedCreateRequestPrimitive();
-//        AE ae=new AE();
-//        ae.setAEID("jsjfa");
-//        ae.setAppID("1234");
-//        requestPrimitive.getContent().getAny().set(0,ae);
-
-//        requestPrimitive.setResultContent(null);
-//        requestPrimitive.setTo("/InCSE1");
-//        iotdm.sendRequestAndGetResponse(requestPrimitive);
-
-        String str="{\n" +
-                "  \"responseStatusCode\": 2000,\n" +
-                "  \"requestIdentifier\": \"1234\",\n" +
-                "  \"content\": {\n" +
-                "    \"any\": [\n" +
-                "      {\n" +
-                "        \"cni\": 0,\n" +
-                "        \"cr\": \"mac\",\n" +
-                "        \"cbs\": 0,\n" +
-                "        \"rn\": \"/InCSE1/container\",\n" +
-                "        \"lbl\": [\n" +
-                "          \"default\"\n" +
-                "        ],\n" +
-                "        \"ri\": \"ek5ouv\",\n" +
-                "        \"lt\": \"20150504T214217Z\",\n" +
-                "        \"st\": 0,\n" +
-                "        \"et\": \"20150504T214217Z\",\n" +
-                "        \"pi\": \"fdnf09\",\n" +
-                "        \"ct\": \"20150504T214217Z\",\n" +
-                "        \"rty\": 3\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }\n" +
-                "}";
-        System.out.println(GsonUtil.jsonToFullNameJson(str));
-
+        Iotdm iotdm=new Iotdm();
+        RequestPrimitive request = iotdm.getInitilazedDeleteRequestPrimitive();
+        request.setTo("/InCSE1/container");
+        iotdm.sendRequestAndGetResponse(request);
     }
 
     public static void xml(){

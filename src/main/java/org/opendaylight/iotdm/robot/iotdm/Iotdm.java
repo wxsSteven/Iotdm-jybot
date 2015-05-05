@@ -1,10 +1,7 @@
 package org.opendaylight.iotdm.robot.iotdm;
 
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
-import org.opendaylight.iotdm.primitive.Attribute;
-import org.opendaylight.iotdm.primitive.PrimitiveContent;
-import org.opendaylight.iotdm.primitive.RequestPrimitive;
-import org.opendaylight.iotdm.primitive.ResponsePrimitive;
+import org.opendaylight.iotdm.primitive.*;
 import org.opendaylight.iotdm.robot.api.Plugin;
 import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
@@ -117,6 +114,7 @@ public class Iotdm {
     public RequestPrimitive getInitilazedRetrieveRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
         rp.setOperation(OneM2M.Operation.RETRIEVE.value());
+        rp.setResultContent(OneM2M.ResultContent.ATTRIBUTES_AND_CHILD_RESOURCES.value());
         rp.setResourceType(null);
         rp.setContent(null);
         rp.setFilterCriteria(null);
@@ -126,6 +124,10 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedUpdateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
+        Container container=new Container();
+        container.setCreator("mac");
+        container.setOntologyRef("laptop");
+        rp.getContent().getAny().set(0,container);
         rp.setOperation(OneM2M.Operation.UPDATE.value());
         rp.setResourceType(null);
         rp.setName(null);
@@ -136,6 +138,7 @@ public class Iotdm {
     public RequestPrimitive getInitilazedDeleteRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
         rp.setOperation(OneM2M.Operation.DELETE.value());
+        rp.setFilterCriteria(null);
         rp.setResourceType(null);
         rp.setName(null);
         rp.setContent(null);
