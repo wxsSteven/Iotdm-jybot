@@ -128,6 +128,7 @@ public class Iotdm {
         container.setCreator("mac");
         container.setOntologyRef("laptop");
         rp.getContent().getAny().set(0,container);
+        rp.setFilterCriteria(null);
         rp.setOperation(OneM2M.Operation.UPDATE.value());
         rp.setResourceType(null);
         rp.setName(null);

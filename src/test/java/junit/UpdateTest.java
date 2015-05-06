@@ -23,12 +23,15 @@ public class UpdateTest {
 
     @Before
     public void createResource(){
+        System.out.println("///////////////////////////////Before Start//////////////////////////////");
         RequestPrimitive createRequest=iotdm.getInitilazedCreateRequestPrimitive();
         createRequest.setName(RESOURCE_NAME);
         iotdm.sendRequestAndGetResponse(createRequest);
+        System.out.println("////////////////////////////////Before End///////////////////////////////");
     }
     @After
     public void cleanResource(){
+        System.out.println("////////////////////////////////After Start////////////////////////////////");
         RequestPrimitive deleteRequest=iotdm.getInitilazedDeleteRequestPrimitive();
         deleteRequest.setTo(PATH);
         iotdm.sendRequestAndGetResponse(deleteRequest);
@@ -87,7 +90,7 @@ public class UpdateTest {
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
 
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest,updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(),updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(),updateResponse);
         //TODO valid the content
 
     }
@@ -133,7 +136,7 @@ public class UpdateTest {
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
 
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest,updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(),updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(),updateResponse);
         //TODO check with error message in content
     }
 
@@ -161,7 +164,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
     }
 
     @Test
@@ -191,7 +194,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
     }
 
     @Test
@@ -234,7 +237,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
     }
 
     @Test
@@ -276,7 +279,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
 
     }
 
@@ -339,7 +342,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
 
     }
 
@@ -355,7 +358,7 @@ public class UpdateTest {
 
         ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
+        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.CHANGED.value(), updateResponse);
 
     }
 
@@ -372,373 +375,4 @@ public class UpdateTest {
         OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
         OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
     }
-
-//    @Test
-//    public void createdBefore_Is_invalid(){
-//        ResponsePrimitive retrieveResponse=retrieveResponse();
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setCreatedBefore("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void createdBefore_Is_valid(){
-//        ResponsePrimitive retrieveResponse=retrieveResponse();
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setCreatedBefore(Onem2mDateTime.getCurrDateTime());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void createdAfter_Is_invalid(){
-//        ResponsePrimitive retrieveResponse=retrieveResponse();
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setCreatedAfter("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void createdAfter_Is_valid(){
-//        ResponsePrimitive retrieveResponse=retrieveResponse();
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setCreatedAfter(Onem2mDateTime.getCurrDateTime());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void modifiedSince_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setModifiedSince("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void modifiedSince_Is_valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setModifiedSince(Onem2mDateTime.getCurrDateTime());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void unmodifiedSince_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setUnmodifiedSince("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void unmodifiedSince_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setUnmodifiedSince(Onem2mDateTime.getCurrDateTime());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void  stateTagSmaller_Is_Invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setStateTagSmaller(BigInteger.valueOf(-1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//
-//    }
-//
-//    @Test
-//    public void  stateTagSmaller_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setStateTagSmaller(BigInteger.TEN);
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//
-//    }
-//
-//    @Test
-//    public void  stateTagBigger_Is_Invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setStateTagBigger(BigInteger.valueOf(-1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//
-//    }
-//
-//    @Test
-//    public void  stateTagBigger_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setStateTagBigger(BigInteger.TEN);
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//
-//    }
-//
-//    @Test
-//    public void expireBefore_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setExpireBefore("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void expireBefore_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setExpireBefore(Onem2mDateTime.getCurrDateTime());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void expireAfter_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setExpireAfter("dfjajdnf");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void labels_Is_Iphone(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.getLabels().add("iphone");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void labels_Is_Iphone_And_Ipad(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.getLabels().add("iphone");
-//        fc.getLabels().add("ipad");
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void filterCriteria_resourceType_Is_Invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setResourceType(BigInteger.valueOf(-1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void filterCriteria_resourceType_Is_Container(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setResourceType(OneM2M.ResourceType.CONTAINER.value());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void filterCriteria_resourceType_Is_ContentInstance(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void sizeAbove_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setSizeAbove(BigInteger.valueOf(-1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void sizeAbove_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setSizeAbove(BigInteger.valueOf(1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void sizeBelow_Is_invalid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setSizeBelow(BigInteger.valueOf(-1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.BAD_REQUEST.value(), updateResponse);
-//    }
-//
-//    @Test
-//    public void sizeBelow_Is_Valid(){
-//
-//        RequestPrimitive updateRequest = updateRequest();
-//        updateRequest.setTo(PATH);
-//        FilterCriteria fc=new FilterCriteria();
-//
-//        fc.setSizeBelow(BigInteger.valueOf(1));
-//
-//        updateRequest.setFilterCriteria(fc);
-//        ResponsePrimitive updateResponse=iotdm.sendRequestAndGetResponse(updateRequest);
-//        OneM2M.Assert.assertEqualRequestIdentifer(updateRequest, updateResponse);
-//        OneM2M.Assert.assertEqualResponseCode(OneM2M.ResponseStatusCodes.OK.value(), updateResponse);
-//    }
 }
