@@ -1,8 +1,7 @@
 package junit;
 
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.primitive.ResponsePrimitive;
@@ -20,12 +19,20 @@ public class CreateTest {
     private static Iotdm iotdm = new Iotdm();
 
 
+    @BeforeClass
+    public static void provision(){
+        iotdm.provision();
+    }
+    @AfterClass
+    public static void cleanUpStore(){
+        iotdm.cleanUpStore();
+    }
+
     @After
     public void clean_Resource_Tree() {
-        System.out.println("//////////////////////////////////After//////////////////////////////////////");
         RequestPrimitive deleteRequest = iotdm.getInitilazedDeleteRequestPrimitive();
         deleteRequest.setTo(PATH);
-        iotdm.sendRequestAndGetResponse(deleteRequest);
+        iotdm.sendRequestAndGetResponseWithoutPrint(deleteRequest);
     }
 
     private RequestPrimitive createRequest() {
@@ -181,7 +188,7 @@ public class CreateTest {
     @Test
     public void name_Is_Valid() {
         RequestPrimitive createRequest = createRequest();
-        createRequest.setName("World");
+        createRequest.setName(RESOURCE_NAME);
 
         ResponsePrimitive responsePrimitive = iotdm.sendRequestAndGetResponse(createRequest);
 

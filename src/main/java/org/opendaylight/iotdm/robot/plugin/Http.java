@@ -1,23 +1,24 @@
 package org.opendaylight.iotdm.robot.plugin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.security.BasicAuthentication;
 import org.eclipse.jetty.http.HttpFields;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
-import org.opendaylight.iotdm.primitive.PrimitiveContent;
 import org.opendaylight.iotdm.primitive.RequestPrimitive;
 import org.opendaylight.iotdm.primitive.ResponsePrimitive;
 import org.opendaylight.iotdm.primitive.ResponseTypeInfo;
 import org.opendaylight.iotdm.robot.api.Plugin;
+import org.opendaylight.iotdm.robot.iotdm.Iotdm;
+import org.opendaylight.iotdm.robot.iotdm.IotdmExchange;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.Prepare;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by wenxshi on 3/30/15.
@@ -45,6 +47,10 @@ public class Http implements Plugin {
 
     private HttpClient httpClient;
     private Server httpServer;
+
+    private String url;
+    private String payload;
+    private String header;
 
     public Http() {
         httpServer = new Server(PORT);
@@ -71,32 +77,51 @@ public class Http implements Plugin {
     }
 
 
-    public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive, String host, String port, String timeout) {
+
+    @Override
+    public void send(IotdmExchange iotdmExchange) {
         ContentExchange exchange = new ContentExchange(true);
-        prepareHttpRequest(exchange, requestPrimitive, host, port);
+        prepareHttpRequest(exchange,iotdmExchange);
 
         try {
             httpClient.send(exchange);
             exchange.waitForDone();
         } catch (Exception e) {
         }
-
-        ResponsePrimitive responsePrimitive = new ResponsePrimitive();
-        prepareResponsePrimitive(exchange, responsePrimitive);
-        return responsePrimitive;
+        prepareResponsePrimitive(exchange, iotdmExchange);
     }
 
-    private void prepareHttpRequest(ContentExchange exchange, RequestPrimitive requestPrimitive, String host, String port) {
+    public void restConf(String url,String payload){
+        ContentExchange exchange=new ContentExchange(true);
+        exchange.setMethod(CREATE_IN_HTTP);
+        exchange.setRequestContentType("application/json");
+        exchange.setURL(url);
+        if (payload != null && !payload.equals(""))
+            exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
+        String authString=Iotdm.USERNAME+":"+Iotdm.PASSWORD;
+        exchange.addRequestHeader("Authorization", "Basic " + new String(Base64.encodeBase64(authString.getBytes())));
+        try {
+            httpClient.send(exchange);
+            exchange.waitForDone();
+        } catch (Exception e) {
+        }
+    }
 
-        String url = Prepare.uri(requestPrimitive, host, port, SCHEMA).toString();
-        String payload = GsonUtil.jsonToPrettyJson(Prepare.payload(requestPrimitive));
+    private void prepareHttpRequest(ContentExchange exchange, IotdmExchange iotdmExchange) {
+
+        RequestPrimitive requestPrimitive=iotdmExchange.getRequestPrimitive();
+        url = Prepare.uri(iotdmExchange.getRequestPrimitive(), iotdmExchange.getHost(), iotdmExchange.getPort(), SCHEMA).toString();
+        payload =Prepare.payload(iotdmExchange.getRequestPrimitive());
 
         exchange.setURL(url);
         exchange.setRequestContentType(CONTENT_TYPE);
 
         if (payload != null && !payload.equals(""))
             exchange.setRequestContentSource(new ByteArrayInputStream(payload.getBytes()));
+
         prepareHeader(requestPrimitive, exchange);
+
+        header=exchange.getRequestFields().toString();
 
         switch (OneM2M.Operation.getEnum(requestPrimitive.getOperation())) {
             case CREATE:
@@ -117,17 +142,10 @@ public class Http implements Plugin {
                 exchange.setMethod(NOTIFY_IN_HTTP);
         }
 
-        System.out.println("Http Request:\n");
-        System.out.println("Uri:");
-        System.out.println(url + "\n");
-        System.out.println("Header:");
-        System.out.println(exchange.getRequestFields().toString());
-        System.out.println("Payload:");
-        System.out.println(payload);
-        System.out.println();
     }
 
-    private void prepareResponsePrimitive(ContentExchange exchange, ResponsePrimitive responsePrimitive) {
+    private void  prepareResponsePrimitive(ContentExchange exchange,IotdmExchange iotdmExchange){
+        ResponsePrimitive responsePrimitive=iotdmExchange.getResponsePrimitive();
         HttpFields fields = exchange.getResponseFields();
 
         if (fields != null) {
@@ -162,7 +180,6 @@ public class Http implements Plugin {
         }
         Prepare.contentOfResponsePrimitive(payload,responsePrimitive);
     }
-
 
     private void prepareHeader(RequestPrimitive requestPrimitive, ContentExchange exchange) {
         if (requestPrimitive.getFrom() != null)
@@ -212,6 +229,24 @@ public class Http implements Plugin {
 
         if (requestPrimitive.getEventCategory() != null)
             exchange.addRequestHeader(OneM2M.Http.Header.X_M2M_EC, requestPrimitive.getEventCategory());
+    }
+
+    public String toString(){
+        StringBuilder sb=new StringBuilder();
+        sb.append("-------------------------------Http Request---------------------------\n");
+        if(url!=null&&!header.equals("")){
+            sb.append("url:\n"+url);
+            sb.append("\n\n");
+        }
+        if(header!=null&&!header.equals("")){
+            sb.append("header:\n"+header);
+            sb.append("\n\n");
+        }
+        if (payload!=null&&!header.equals("")){
+            sb.append("payload:\n"+GsonUtil.jsonToPrettyJson(payload));
+            sb.append("\n\n");
+        }
+        return sb.toString();
     }
 
 

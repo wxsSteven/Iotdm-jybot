@@ -17,18 +17,27 @@ public class DeleteTest {
     private static final String PATH = "/InCSE1/" + RESOURCE_NAME;
     private static Iotdm iotdm = new Iotdm();
 
+    @BeforeClass
+    public static void provision(){
+        iotdm.provision();
+    }
+    @AfterClass
+    public static void cleanUpStore(){
+        iotdm.cleanUpStore();
+    }
+
     @Before
     public void build_Resource_Tree() {
         RequestPrimitive createRequest = iotdm.getInitilazedCreateRequestPrimitive();
         createRequest.setName(RESOURCE_NAME);
-        iotdm.sendRequestAndGetResponse(createRequest);
+        iotdm.sendRequestAndGetResponseWithoutPrint(createRequest);
     }
 
     @After
     public void clean_Resource_Tree() {
         RequestPrimitive deleteRequest = iotdm.getInitilazedDeleteRequestPrimitive();
         deleteRequest.setTo(PATH);
-        iotdm.sendRequestAndGetResponse(deleteRequest);
+        iotdm.sendRequestAndGetResponseWithoutPrint(deleteRequest);
     }
 
     @Test

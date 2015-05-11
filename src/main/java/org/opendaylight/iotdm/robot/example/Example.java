@@ -26,9 +26,7 @@ import java.security.Timestamp;
 public class Example {
     public static void main(String[] args) {
         Iotdm iotdm=new Iotdm();
-        RequestPrimitive request = iotdm.getInitilazedDeleteRequestPrimitive();
-        request.setTo("/InCSE1/container");
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.cleanUpStore();
     }
 
     public static void xml(){

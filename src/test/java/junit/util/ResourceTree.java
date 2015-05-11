@@ -16,16 +16,16 @@ import java.util.List;
  */
 public class ResourceTree {
 
-    public static List<String> timeStamp=new LinkedList<>();
-    public static final String PATH="/InCSE1/container";
+    public static List<String> timeStamp = new LinkedList<>();
+    public static final String PATH = "/InCSE1/container";
 
     public static void buildResourceTree() throws InterruptedException {
 
-        Iotdm iotdm=new Iotdm();
-        RequestPrimitive request=iotdm.getInitilazedCreateRequestPrimitive();
-        PrimitiveContent content=new PrimitiveContent();
-        Container container=new Container();
-        ContentInstance contentInstance=new ContentInstance();
+        Iotdm iotdm = new Iotdm();
+        RequestPrimitive request = iotdm.getInitilazedCreateRequestPrimitive();
+        PrimitiveContent content = new PrimitiveContent();
+        Container container = new Container();
+        ContentInstance contentInstance = new ContentInstance();
 
         container.getLabels().add("apple");
         contentInstance.getLabels().add("apple");
@@ -37,7 +37,7 @@ public class ResourceTree {
         request.setTo("/InCSE1");
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         request.setContent(content);
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
         timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
@@ -46,7 +46,7 @@ public class ResourceTree {
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         container.getLabels().set(0, "ipad");
         content.getAny().set(0, container);
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
         timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
@@ -55,7 +55,7 @@ public class ResourceTree {
         request.setResourceType(OneM2M.ResourceType.CONTAINER.value());
         container.getLabels().set(0, "iphone");
         content.getAny().set(0, container);
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
         timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
@@ -64,7 +64,7 @@ public class ResourceTree {
         request.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
         contentInstance.getLabels().set(0, "ipad");
         content.getAny().set(0, contentInstance);
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
         timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
 
@@ -73,15 +73,15 @@ public class ResourceTree {
         request.setResourceType(OneM2M.ResourceType.CONTENT_INSTANCE.value());
         contentInstance.getLabels().set(0, "iphone");
         content.getAny().set(0, contentInstance);
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
         timeStamp.add(Onem2mDateTime.getCurrDateTime());
         Thread.sleep(1000);
     }
 
-    public static void cleanResourceTree(){
-        Iotdm iotdm=new Iotdm();
+    public static void cleanResourceTree() {
+        Iotdm iotdm = new Iotdm();
         RequestPrimitive request = iotdm.getInitilazedDeleteRequestPrimitive();
         request.setTo("/InCSE1/container");
-        iotdm.sendRequestAndGetResponse(request);
+        iotdm.sendRequestAndGetResponseWithoutPrint(request);
     }
 }

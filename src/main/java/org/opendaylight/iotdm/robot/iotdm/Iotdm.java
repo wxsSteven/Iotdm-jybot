@@ -3,6 +3,7 @@ package org.opendaylight.iotdm.robot.iotdm;
 import org.opendaylight.iotdm.constant.onem2m.OneM2M;
 import org.opendaylight.iotdm.primitive.*;
 import org.opendaylight.iotdm.robot.api.Plugin;
+import org.opendaylight.iotdm.robot.plugin.Http;
 import org.opendaylight.iotdm.robot.plugin.PluginCenter;
 import org.opendaylight.iotdm.robot.util.GsonUtil;
 import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
@@ -10,7 +11,6 @@ import org.opendaylight.iotdm.robot.util.RequestPrimitiveFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.net.URI;
 import java.util.List;
 
 
@@ -18,6 +18,9 @@ import java.util.List;
  * Created by wenxshi on 3/31/15.
  */
 public class Iotdm {
+    public static final String USERNAME="admin";
+    public static final String PASSWORD="admin";
+
     private String host = "localhost";
     private String port = "8282";
 
@@ -76,6 +79,33 @@ public class Iotdm {
      * @return
      */
 
+    public void provision(){
+        Http http=new Http();
+        http.start();
+        http.restConf(schema+"://"+host+":8181/restconf/operations/onem2m:onem2m-cse-provisioning",
+                "{    \"input\": {\n" +
+                "        \"onem2m-primitive\": [\n" +
+                "           {\n" +
+                "                \"name\": \"CSE_ID\",\n" +
+                "                \"value\": \"InCSE1\"\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"name\": \"CSE_TYPE\",\n" +
+                "                \"value\": \"IN-CSE\"\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    }\n" +
+                "}");
+        http.close();
+    }
+
+    public void cleanUpStore(){
+        Http http=new Http();
+        http.start();
+        http.restConf(schema+"://"+host+":8181/restconf/operations/onem2m:onem2m-cleanup-store",null);
+        http.close();
+    }
+
 
     public void setAccessPoint(String host, String port, String timeout) {
         this.host = host;
@@ -124,10 +154,10 @@ public class Iotdm {
 
     public RequestPrimitive getInitilazedUpdateRequestPrimitive() {
         RequestPrimitive rp = RequestPrimitiveFactory.makeDefaultRequestPrimitive();
-        Container container=new Container();
+        Container container = new Container();
         container.setCreator("mac");
         container.setOntologyRef("laptop");
-        rp.getContent().getAny().set(0,container);
+        rp.getContent().getAny().set(0, container);
         rp.setFilterCriteria(null);
         rp.setOperation(OneM2M.Operation.UPDATE.value());
         rp.setResourceType(null);
@@ -158,6 +188,7 @@ public class Iotdm {
         rp.setDiscoveryResultType(null);
         return rp;
     }
+
 
     public void changeAttributeIn(Object object, String methodName, Object newValue) {
         methodName = methodName.replaceAll(" ", "");
@@ -235,26 +266,46 @@ public class Iotdm {
 
     public ResponsePrimitive sendRequestAndGetResponse(RequestPrimitive requestPrimitive) {
         Plugin plugin = PluginCenter.getPlugin(schema);
-        try {
-            URI uri = new URI(requestPrimitive.getTo());
-            if (uri.getScheme() != null)
-                plugin = PluginCenter.getPlugin(uri.getScheme());
-        } catch (Exception e) {
-            System.out.println();
-        }
+
+        IotdmExchange iotdmExchange = new IotdmExchange();
+        iotdmExchange.setRequestPrimitive(requestPrimitive);
+        iotdmExchange.setPort(port);
+        iotdmExchange.setHost(host);
+        iotdmExchange.setTimeout(timeout);
+        iotdmExchange.setPlugin(plugin);
 
         plugin.start();
-        System.out.println("--------------------------RequestPrimitive:-------------------------------");
-        System.out.println(GsonUtil.toPrettyJson(requestPrimitive));
-        System.out.println("\n\n");
-
-        ResponsePrimitive responsePrimitive = plugin.sendRequestAndGetResponse(requestPrimitive, host, port, timeout);
-
-        System.out.println("--------------------------ResponsePrimitive:-----------------------------");
-        System.out.println(GsonUtil.jsonToPrettyJson(GsonUtil.jsonToFullNameJson(GsonUtil.toJson(responsePrimitive))));
+        plugin.send(iotdmExchange);
+        System.out.println(iotdmExchange.toString());
         plugin.close();
-        return responsePrimitive;
+
+        return iotdmExchange.getResponsePrimitive();
     }
+
+    public ResponsePrimitive sendRequestAndGetResponseWithoutPrint(RequestPrimitive requestPrimitive) {
+        IotdmExchange iotdmExchange = new IotdmExchange();
+        iotdmExchange.setRequestPrimitive(requestPrimitive);
+        iotdmExchange.setPort(port);
+        iotdmExchange.setHost(host);
+
+        Plugin plugin = PluginCenter.getPlugin(schema);
+        plugin.start();
+        plugin.send(iotdmExchange);
+        plugin.close();
+
+        return iotdmExchange.getResponsePrimitive();
+    }
+
+    public void send(IotdmExchange iotdmExchange) {
+        iotdmExchange.setPort(port);
+        iotdmExchange.setHost(host);
+
+        Plugin plugin = PluginCenter.getPlugin(schema);
+        plugin.start();
+        plugin.send(iotdmExchange);
+        plugin.close();
+    }
+
 
     public String toJson(Object o) {
         return GsonUtil.toPrettyJson(o);
